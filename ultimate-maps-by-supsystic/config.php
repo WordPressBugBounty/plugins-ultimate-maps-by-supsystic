@@ -49,7 +49,7 @@
 	define('UMS_EOL', "\n");
 
     define('UMS_PLUGIN_INSTALLED', true);
-    define('UMS_VERSION_PLUGIN', '1.2.18');
+    define('UMS_VERSION_PLUGIN', '1.2.19');
     define('UMS_USER', 'user');
 
     define('UMS_CLASS_PREFIX', 'umsc');

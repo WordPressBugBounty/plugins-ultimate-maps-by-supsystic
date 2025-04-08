@@ -3,7 +3,7 @@
  * Plugin Name: Ultimate Maps by Supsystic
  * Plugin URI: https://supsystic.com/plugins/ultimate-maps/
  * Description: This plugin provides a powerful solution for those looking for an alternative to Google Maps like Leaflet, MapBox or Bing map engines.
- * Version: 1.2.18
+ * Version: 1.2.19
  * Author: supsystic.com
  * Author URI: http://supsystic.com
  * Text Domain: ultimate-maps-by-supsystic
