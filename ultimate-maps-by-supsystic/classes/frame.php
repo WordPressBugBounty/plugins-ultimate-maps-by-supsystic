@@ -98,7 +98,11 @@ class frameUms {
             }
         }
     }
-    public function init() {
+     public function init() {
+      reqUms::init();
+      add_action('init', array($this, '_delayedInit'), 5);
+    }
+    public function _delayedInit() {
         //$startTime = microtime(true);
         reqUms::init();
         $this->_extractTables();
