@@ -6,8 +6,8 @@ Donate link: https://supsystic.com/plugins/plugins/ultimate-maps
 Tags: Wordpress map, OpenStreetMap, leaflet, map plugin, bing map
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.2.22
-License URI: https://supsystic.com/plugins/ultimate-maps-by-supsystic
+Stable tag: 1.2.23
+License: GNU General Public License v2.0 or later
 
 Ultimate Maps by Supsystic is the best Google Maps alternative. It includes OpenStreetMap (OSM), Bing Maps, MapBox and Thunderforest maps services
 
@@ -200,6 +200,11 @@ Check an [Example of the Map Stylization](https://supsystic.com/example/map-styl
 8. [Ultimate Maps WordPress plugin](https://supsystic.com/plugins/ultimate-maps  "Ultimate Maps WordPress plugin") admin area. Shapes settings (pro)
 
 == Changelog ==
+= 1.2.23 / 26.11.2025 =
+ * Minor fixes and overview update
+ * Updates for WP 6.8.3
+ * Fixed Zone issue
+
 = 1.2.22 / 17.06.2025 =
  * Minor fixes and overview update
 
