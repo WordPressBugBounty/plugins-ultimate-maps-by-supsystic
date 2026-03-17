@@ -1,5 +1,5 @@
 <div class="supsystic-actions-wrap" style="display: none;">
-    <a class="button-table-action" id="editMarkerGroup<?php echo esc_attr($this->marker_group['id']); ?>" href="<?php echo esc_url($this->editLink) ?>">
+    <a class="button-table-action" id="editMarkerGroup<?php echo esc_attr($this->marker_group['id']); ?>" href="<?php echo esc_url($this->editLink); ?>">
         <i class="fa fa-fw fa-pencil"></i>
     </a>
     <a class="button-table-action" id="deleteMarkerGroup<?php echo esc_attr($this->marker_group['id']); ?>" href="#" onclick="umsRemoveMarkerGroupFromTblClick(<?php echo esc_attr($this->marker_group['id']); ?>);">

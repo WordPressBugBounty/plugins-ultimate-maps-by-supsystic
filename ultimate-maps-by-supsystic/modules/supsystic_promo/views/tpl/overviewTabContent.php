@@ -1,6 +1,6 @@
 <div class="supsystic-overview">
     <div class="full-page">
-        <div class="plugin-title"><img src="<?php echo esc_url(UMS_PLUGINS_URL .'/'. UMS_PLUG_NAME);?>/modules/supsystic_promo/img/plugin-icon.png">Ultimate Maps By Supsystic</div>
+        <div class="plugin-title"><img src="<?php echo esc_url(UMS_PLUGINS_URL . '/' . UMS_PLUG_NAME); ?>/modules/supsystic_promo/img/plugin-icon.png">Ultimate Maps By Supsystic</div>
         <div class="plugin-description">This Ultimate Maps plugin provides a powerful solution for those looking for an alternative to Google Maps.</div>
     </div>
     <div class="supsystic-overview-flex">
@@ -12,9 +12,15 @@
                     <li class="overview-section-btn" data-section="settings"><i class="fa fa-cog"></i> Server Settings</li>
                     <li class="overview-section-btn" data-section="support"><i class="fa fa-life-ring"></i> Support</li>
                     <li class="overview-section-btn" data-section="promo_video"><i class="fa fa-star"></i> Our promo video</li>
-                    <li class="overview-section-btn"><a target="_blank" title="Go to supsystic.com" href="<?php echo esc_url('https://supsystic.com/plugins/ultimate-maps/?utm_source=plugin&utm_campaign=ultimate-maps');?>"> Plugin page on supsystic.com <sup><i class="fa fa-external-link"></i></sup></a></li>
-                    <li class="overview-section-btn"><a target="_blank" title="Go to supsystic.com" href="<?php echo esc_url('https://supsystic.com/plugins/ultimate-maps/?utm_source=plugin&utm_campaign=ultimate-maps');?>"> Compare FREE and PRO features <sup><i class="fa fa-external-link"></i></sup></a></li>
-                    <li class="overview-section-btn"><a target="_blank" title="Go to supsystic.com" href="<?php echo esc_url('https://supsystic.com/all-plugins/?utm_source=plugin&utm_campaign=ultimate-maps');?>"> Check other supsystic FREE plugins <sup><i class="fa fa-external-link"></i></sup></a></li>
+                    <li class="overview-section-btn"><a target="_blank" title="Go to supsystic.com" href="<?php echo esc_url(
+                      'https://supsystic.com/plugins/ultimate-maps/?utm_source=plugin&utm_campaign=ultimate-maps',
+                    ); ?>"> Plugin page on supsystic.com <sup><i class="fa fa-external-link"></i></sup></a></li>
+                    <li class="overview-section-btn"><a target="_blank" title="Go to supsystic.com" href="<?php echo esc_url(
+                      'https://supsystic.com/plugins/ultimate-maps/?utm_source=plugin&utm_campaign=ultimate-maps',
+                    ); ?>"> Compare FREE and PRO features <sup><i class="fa fa-external-link"></i></sup></a></li>
+                    <li class="overview-section-btn"><a target="_blank" title="Go to supsystic.com" href="<?php echo esc_url(
+                      'https://supsystic.com/all-plugins/?utm_source=plugin&utm_campaign=ultimate-maps',
+                    ); ?>"> Check other supsystic FREE plugins <sup><i class="fa fa-external-link"></i></sup></a></li>
                 </ul>
             </div>
             <div class="border-wrapper">
@@ -33,37 +39,41 @@
 
                     <form id="form-settings">
                         <table class="contact-form-table">
-                            <?php foreach($this->contactFields as $fName => $fData) { ?>
+                            <?php foreach ($this->contactFields as $fName => $fData) { ?>
                                 <?php
-                                    $htmlType = $fData['html'];
-                                    $id = 'contact_form_'. $fName;
-                                    $htmlParams = array('attrs' => 'id="'. $id. '"');
-                                    if(isset($fData['placeholder']))
-                                        $htmlParams['placeholder'] = $fData['placeholder'];
-                                    if(isset($fData['options']))
-                                        $htmlParams['options'] = $fData['options'];
-                                    if(isset($fData['def']))
-                                        $htmlParams['value'] = $fData['def'];
-                                    if(isset($fData['valid']) && in_array('notEmpty', $fData['valid']))
-                                        $htmlParams['required'] = true;
+                                $htmlType = $fData['html'];
+                                $id = 'contact_form_' . $fName;
+                                $htmlParams = ['attrs' => 'id="' . $id . '"'];
+                                if (isset($fData['placeholder'])) {
+                                  $htmlParams['placeholder'] = $fData['placeholder'];
+                                }
+                                if (isset($fData['options'])) {
+                                  $htmlParams['options'] = $fData['options'];
+                                }
+                                if (isset($fData['def'])) {
+                                  $htmlParams['value'] = $fData['def'];
+                                }
+                                if (isset($fData['valid']) && in_array('notEmpty', $fData['valid'])) {
+                                  $htmlParams['required'] = true;
+                                }
                                 ?>
                             <tr>
                                 <th scope="row">
-                                    <label for="<?php echo $id?>"><?php echo esc_html($fData['label'])?></label>
+                                    <label for="<?php echo $id; ?>"><?php echo esc_html($fData['label']); ?></label>
                                 </th>
                                 <td>
-                                    <?php echo htmlUms::$htmlType($fName, $htmlParams)?>
+                                    <?php echo htmlUms::$htmlType($fName, $htmlParams); ?>
                                 </td>
                             </tr>
-                            <?php }?>
+                            <?php } ?>
                             <tr>
                                 <th scope="row" colspan="2">
-                                    <?php echo htmlUms::hidden('mod', array('value' => 'supsystic_promo'))?>
+                                    <?php echo htmlUms::hidden('mod', ['value' => 'supsystic_promo']); ?>
                                     <?php echo htmlUms::defaultNonceForAdminPanel(); ?>
-                                    <?php echo htmlUms::hidden('action', array('value' => 'sendContact'))?>
+                                    <?php echo htmlUms::hidden('action', ['value' => 'sendContact']); ?>
                                     <button class="button button-primary button-hero" style="float: right;">
                                         <i class="fa fa-upload"></i>
-                                        <?php esc_html_e('Send email', UMS_LANG_CODE)?>
+                                        <?php esc_html_e('Send email', UMS_LANG_CODE); ?>
                                     </button>
                                     <div style="clear: both;"></div>
                                 </th>
@@ -76,23 +86,23 @@
                 <div id="contact-form-dialog" hidden>
                     <div class="on-error" style="display:none">
                             <p>Some errors occurred while sending mail please send your message trough this contact form:</p>
-                            <p><a href="<?php echo esc_url('https://supsystic.com/plugins/#contact');?>" target="_blank">https://supsystic.com/plugins/#contact</a></p>
+                            <p><a href="<?php echo esc_url('https://supsystic.com/plugins/#contact'); ?>" target="_blank">https://supsystic.com/plugins/#contact</a></p>
                     </div>
                     <div class="message"></div>
                 </div>
                 <div data-section="faq" class="faq-list overview-section">
-                    <h3><?php esc_html_e('FAQ and Documentation', UMS_LANG_CODE)?></h3>
-                    <?php foreach($this->faqList as $title => $desc) { ?>
+                    <h3><?php esc_html_e('FAQ and Documentation', UMS_LANG_CODE); ?></h3>
+                    <?php foreach ($this->faqList as $title => $desc) { ?>
                         <div class="faq-title">
                             <i class="fa fa-info-circle"></i>
-                            <?php echo esc_html($title);?>
-                            <div class="description" style="display: none;"><?php echo esc_html($desc);?></div>
+                            <?php echo esc_html($title); ?>
+                            <div class="description" style="display: none;"><?php echo esc_html($desc); ?></div>
                         </div>
-                    <?php }?>
+                    <?php } ?>
                     <div style="clear: both;"></div>
-                    <a target="_blank" href="<?php echo esc_url('https://supsystic.com/docs/ultimate-maps-documentation/?utm_source=plugin&utm_medium=faq&utm_campaign=ultimate-maps');?>" class="button button-primary button-hero">
+                    <a target="_blank" href="<?php echo esc_url('https://supsystic.com/docs/ultimate-maps-documentation/?utm_source=plugin&utm_medium=faq&utm_campaign=ultimate-maps'); ?>" class="button button-primary button-hero">
                             <i class="fa fa-info-circle"></i>
-                            <?php esc_html_e('Check all FAQs', UMS_LANG_CODE)?>
+                            <?php esc_html_e('Check all FAQs', UMS_LANG_CODE); ?>
                     </a>
                     <div class="clear"></div>
                 </div>
@@ -119,25 +129,29 @@
                 <div data-section="settings" class="server-settings overview-section">
                     <h3><i class="fa fa-cog"></i> Server settings</h3>
                     <ul class="settings-list">
-                            <?php foreach($this->serverSettings as $title => $element) {?>
+                            <?php foreach ($this->serverSettings as $title => $element) { ?>
                                 <li class="settings-line">
-                                    <div class="settings-title"><?php echo esc_html($title);?>:</div>
-                                    <span><?php echo esc_html($element['value'])?></span>
+                                    <div class="settings-title"><?php echo esc_html($title); ?>:</div>
+                                    <span><?php echo esc_html($element['value']); ?></span>
                                 </li>
-                            <?php }?>
+                            <?php } ?>
                     </ul>
                     <div class="clear"></div>
                 </div>
             </div>
         </div>
         <div class="half-page half-page-right">
-            <a href="https://wuwizards.com/?utm_source=supsystic_plugin&utm_campaign=banner" target="_blank"><img class="overview-supsystic-img" src="<?php echo UMS_PLUGINS_URL .'/'. UMS_PLUG_NAME;?>/modules/supsystic_promo/img/overview-wuwizards-banner.png"></a>
-            <?php if(frameUms::_()->getModule('supsystic_promo')->isPro()) {?>
-                <a href="https://supsystic.com/contact-us" target="_blank"><img class="overview-supsystic-img" src="<?php echo esc_url(UMS_PLUGINS_URL .'/'. UMS_PLUG_NAME);?>/modules/supsystic_promo/img/overview-upgrade.png"></a>
-            <?php }?>
-            <a href="<?php echo esc_url('https://supsystic.com/pricing/?utm_source=plugin&utm_campaign=ultimate-maps');?>" target="_blank"><img class="overview-supsystic-img" src="<?php echo esc_url(UMS_PLUGINS_URL .'/'. UMS_PLUG_NAME);?>/modules/supsystic_promo/img/overview-01.png"></a>
-            <a href="<?php echo esc_url('https://supsystic.com/plugins/plugins-bundle/?utm_source=plugin&utm_campaign=ultimate-maps');?>" target="_blank"><img class="overview-supsystic-img" src="<?php echo esc_url(UMS_PLUGINS_URL .'/'. UMS_PLUG_NAME);?>/modules/supsystic_promo/img/overview-02.png"></a>
-            <a href="<?php echo esc_url('https://supsystic.com/all-plugins/?utm_source=plugin&utm_campaign=ultimate-maps');?>" target="_blank"><img style="margin-top:20px;"  class="overview-supsystic-img" src="<?php echo esc_url(UMS_PLUGINS_URL .'/'. UMS_PLUG_NAME);?>/modules/supsystic_promo/img/overview-03.png"></a>
+            <a href="https://wuwizards.com/?utm_source=supsystic_plugin&utm_campaign=banner" target="_blank"><img class="overview-supsystic-img" src="<?php echo UMS_PLUGINS_URL . '/' . UMS_PLUG_NAME; ?>/modules/supsystic_promo/img/overview-wuwizards-banner.png"></a>
+            <?php if (frameUms::_()->getModule('supsystic_promo')->isPro()) { ?>
+                <a href="https://supsystic.com/contact-us" target="_blank"><img class="overview-supsystic-img" src="<?php echo esc_url(UMS_PLUGINS_URL . '/' . UMS_PLUG_NAME); ?>/modules/supsystic_promo/img/overview-upgrade.png"></a>
+            <?php } ?>
+            <a href="<?php echo esc_url('https://supsystic.com/pricing/?utm_source=plugin&utm_campaign=ultimate-maps'); ?>" target="_blank"><img class="overview-supsystic-img" src="<?php echo esc_url(UMS_PLUGINS_URL . '/' . UMS_PLUG_NAME); ?>/modules/supsystic_promo/img/overview-01.png"></a>
+            <a href="<?php echo esc_url('https://supsystic.com/plugins/plugins-bundle/?utm_source=plugin&utm_campaign=ultimate-maps'); ?>" target="_blank"><img class="overview-supsystic-img" src="<?php echo esc_url(
+  UMS_PLUGINS_URL . '/' . UMS_PLUG_NAME,
+); ?>/modules/supsystic_promo/img/overview-02.png"></a>
+            <a href="<?php echo esc_url('https://supsystic.com/all-plugins/?utm_source=plugin&utm_campaign=ultimate-maps'); ?>" target="_blank"><img style="margin-top:20px;"  class="overview-supsystic-img" src="<?php echo esc_url(
+  UMS_PLUGINS_URL . '/' . UMS_PLUG_NAME,
+); ?>/modules/supsystic_promo/img/overview-03.png"></a>
             <div class="clear"></div>
         </div>
     </div>

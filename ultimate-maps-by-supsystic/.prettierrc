@@ -1,0 +1,25 @@
+{
+  "plugins": ["@prettier/plugin-php"],
+  "phpVersion": "8.4",
+  "printWidth": 300,
+  "htmlWhitespaceSensitivity": "ignore",
+  "proseWrap": "never",
+  "bracketSameLine": true,
+  "singleAttributePerLine": false,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "trailingCommaPHP": true,
+  "braceStyle": "per-cs",
+  "bracketSpacing": true,
+  "overrides": [
+    {
+      "files": "*.php",
+      "options": {
+        "parser": "php"
+      }
+    }
+  ]
+}

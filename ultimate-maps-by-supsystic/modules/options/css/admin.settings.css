@@ -1,7 +1,7 @@
-#containerWrapper h3, 
+#containerWrapper h3,
 #containerWrapper h4 {
-	margin: 0;
+  margin: 0;
 }
-#umsSettingsForm .form-table input[type="text"]{
-	width: 100%;
+#umsSettingsForm .form-table input[type='text'] {
+  width: 100%;
 }

@@ -1,14 +1,14 @@
 <?php
 if (empty($this->currentMap)) {
-    return;
+  return;
 }
 $viewId = esc_attr($this->currentMap['view_id']);
 $mapHtmlId = esc_attr($this->currentMap['view_html_id']);
 $width = trim($this->currentMap['html_options']['width']);
 $widthUnits = trim($this->currentMap['params']['width_units']);
 if (strpos($width, '%') === false && strpos($width, 'px') === false) {
-    $widthUnits = isset($this->currentMap['params']['width_units']) ? esc_attr($this->currentMap['params']['width_units']) : 'px';
-    $width = (int)$width . esc_attr($widthUnits);
+  $widthUnits = isset($this->currentMap['params']['width_units']) ? esc_attr($this->currentMap['params']['width_units']) : 'px';
+  $width = (int) $width . esc_attr($widthUnits);
 }
 //$width = $width.$widthUnits;
 $percentMode = strpos($width, '%') == strlen($width) - 1 ? true : false;
@@ -17,10 +17,8 @@ $controlsWidth = $percentMode ? '100%' : esc_attr($width);
 
 $height = esc_attr($this->currentMap['html_options']['height']);
 
-$align = isset($this->currentMap['html_options']['align']) 
-         ? trim(esc_attr($this->currentMap['html_options']['align'])) 
-         : '';
-$border = ((int)@$this->currentMap['html_options']['border_width']) . 'px solid ' . esc_attr(@$this->currentMap['html_options']['border_color']);
+$align = isset($this->currentMap['html_options']['align']) ? trim(esc_attr($this->currentMap['html_options']['align'])) : '';
+$border = ((int) @$this->currentMap['html_options']['border_width']) . 'px solid ' . esc_attr(@$this->currentMap['html_options']['border_color']);
 $margin = esc_attr(@$this->currentMap['html_options']['margin']);
 ?>
 <style type="text/css" id="umsMapStyles_<?php echo $viewId; ?>">
@@ -31,13 +29,13 @@ $margin = esc_attr(@$this->currentMap['html_options']['margin']);
             float: <?php echo $align; ?>;
         <?php } ?>
         border: <?php echo $border; ?>;
-        margin: <?php echo ((int)$margin) . 'px'; ?>;
+        margin: <?php echo ((int) $margin) . 'px'; ?>;
     }
     #mapsControlsNum_<?php echo $viewId; ?> {
         width:<?php echo $controlsWidth; ?>
     }
     .umsMapDetailsContainer#umsMapDetailsContainer_<?php echo $viewId; ?> {
-        height:<?php echo (int)$height; ?>px;
+        height:<?php echo (int) $height; ?>px;
     }
     .ums_MapPreview#<?php echo $mapHtmlId; ?> {
         /*position:absolute;*/
@@ -48,8 +46,8 @@ $margin = esc_attr(@$this->currentMap['html_options']['margin']);
     }
     <?php if (isset($this->currentMap['params']['infownd_title_color'])) { ?>
         #<?php echo $mapHtmlId; ?> .umsInfoWindowtitle {
-            color: <?php echo esc_attr($this->currentMap['params']['infownd_title_color']) ?> !important;
-            font-size: <?php echo esc_attr($this->currentMap['params']['infownd_title_size']) ?>px !important;
+            color: <?php echo esc_attr($this->currentMap['params']['infownd_title_color']); ?> !important;
+            font-size: <?php echo esc_attr($this->currentMap['params']['infownd_title_size']); ?>px !important;
         }
     <?php } ?>
 </style>

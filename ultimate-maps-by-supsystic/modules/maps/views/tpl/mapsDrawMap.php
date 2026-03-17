@@ -5,25 +5,24 @@ $mapPreviewClassname = esc_attr(@$this->currentMap['html_options']['classname'])
 //$mapOptsClassname = $popup ? 'display_as_popup' : '';
 
 if ($this->markersDisplayType === 'slider_checkbox_table') {
-    $mapsWrapperStart = "<div class='umsLeft'>";
-    $mapsWrapperEnd = "</div>";
-    $filtersWrapperStart = "<div class='filterRight'>";
-    $filtersWrapperEnd = "</div>";
+  $mapsWrapperStart = "<div class='umsLeft'>";
+  $mapsWrapperEnd = '</div>';
+  $filtersWrapperStart = "<div class='filterRight'>";
+  $filtersWrapperEnd = '</div>';
 } else {
-    $mapsWrapperStart = "";
-    $mapsWrapperEnd = "";
-    $filtersWrapperStart = "";
-    $filtersWrapperEnd = "";
+  $mapsWrapperStart = '';
+  $mapsWrapperEnd = '';
+  $filtersWrapperStart = '';
+  $filtersWrapperEnd = '';
 }
 ?>
 <div class="ums_map_opts" id="mapConElem_<?php echo $viewId; ?>"
     data-id="<?php echo esc_attr($this->currentMap['id']); ?>" data-view-id="<?php echo $viewId; ?>"
     <?php if (!empty($this->mbsIntegrating)) {
-        echo 'data-mbs-gme-map="' . esc_attr($this->currentMap['id']) . '" style="display:none;"';
-    } else if (!empty($this->mbsMapId) && !empty($this->mbsMapInfo)) {
-        echo "data-mbs-gme-map-id='" . esc_attr($this->mbsMapId) . "' data-mbs-gme-map-info='" . esc_attr($this->mbsMapInfo) . "'";
-    }
-    ?>
+      echo 'data-mbs-gme-map="' . esc_attr($this->currentMap['id']) . '" style="display:none;"';
+    } elseif (!empty($this->mbsMapId) && !empty($this->mbsMapInfo)) {
+      echo "data-mbs-gme-map-id='" . esc_attr($this->mbsMapId) . "' data-mbs-gme-map-info='" . esc_attr($this->mbsMapInfo) . "'";
+    } ?>
 >
     <?php echo $mapsWrapperStart; ?>
     <div class="umsMapDetailsContainer" id="umsMapDetailsContainer_<?php echo $viewId; ?>">

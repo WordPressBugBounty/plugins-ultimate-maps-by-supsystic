@@ -1,4 +1,2 @@
 <?php
-class maps_widgetControllerUms extends controllerUms {
-
-}
+class maps_widgetControllerUms extends controllerUms {}

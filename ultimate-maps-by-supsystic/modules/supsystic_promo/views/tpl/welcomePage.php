@@ -73,72 +73,76 @@ jQuery(document).ready(function(){
     <div class="supsystic-item supsystic-panel">
         <form id="toeWelcomePageFindUsForm" method="GET">
             <h1>
-                <?php esc_html_e('Welcome to', UMS_LANG_CODE)?>
-                <?php echo esc_html(UMS_WP_PLUGIN_NAME)?>
-                <?php esc_html_e('Version', UMS_LANG_CODE)?>
-                <?php echo esc_html(UMS_VERSION_PLUGIN);?>!
+                <?php esc_html_e('Welcome to', UMS_LANG_CODE); ?>
+                <?php echo esc_html(UMS_WP_PLUGIN_NAME); ?>
+                <?php esc_html_e('Version', UMS_LANG_CODE); ?>
+                <?php echo esc_html(UMS_VERSION_PLUGIN); ?>!
             </h1>
             <div class="clear"></div>
             <hr />
             <div class="about-message">
-                <?php printf(esc_html__('This is first start up of the %s plugin.', UMS_LANG_CODE), esc_html(UMS_WP_PLUGIN_NAME));?><br />
-                <?php esc_html_e('If you are newbie - check all features on that page, if you are guru - please correct us.', UMS_LANG_CODE);?> 
+                <?php printf(esc_html__('This is first start up of the %s plugin.', UMS_LANG_CODE), esc_html(UMS_WP_PLUGIN_NAME)); ?><br />
+                <?php esc_html_e('If you are newbie - check all features on that page, if you are guru - please correct us.', UMS_LANG_CODE); ?> 
             </div>
             <div class="clear"></div>
             <div class="spacer"></div>
 
             <h2>Where did you find us?</h2>
-            <?php foreach($this->askOptions as $askId => $askOpt) { ?>
-                <label><?php echo htmlUms::radiobutton('where_find_us', array('value' => esc_attr($askId)));?>&nbsp;<?php echo esc_html($askOpt['label']);?></label>
-                <?php if($askId == 4 /*Find on the web*/) { ?>
-                    <label id="toeFindUsUrlShell" style="display: none;"><?php esc_html_e('Please, post url', UMS_LANG_CODE);?>: <?php echo htmlUms::text('find_on_web_url');?></label>
-                <?php } elseif($askId == 5 /*Other way*/) { ?>
-                    <label style="display: none;" id="toeOtherWayTextShell"><?php echo htmlUms::textarea('other_way_desc');?></label>
-                <?php }?>
-            <?php }?>
+            <?php foreach ($this->askOptions as $askId => $askOpt) { ?>
+                <label><?php echo htmlUms::radiobutton('where_find_us', ['value' => esc_attr($askId)]); ?>&nbsp;<?php echo esc_html($askOpt['label']); ?></label>
+                <?php if ($askId == 4 /*Find on the web*/) { ?>
+                    <label id="toeFindUsUrlShell" style="display: none;"><?php esc_html_e('Please, post url', UMS_LANG_CODE); ?>: <?php echo htmlUms::text('find_on_web_url'); ?></label>
+                <?php } elseif ($askId == 5 /*Other way*/) { ?>
+                    <label style="display: none;" id="toeOtherWayTextShell"><?php echo htmlUms::textarea('other_way_desc'); ?></label>
+                <?php } ?>
+            <?php } ?>
 
             <div class="spacer"></div>
 
-            <h2><?php esc_html_e('Video tutorial', UMS_LANG_CODE)?></h2>
+            <h2><?php esc_html_e('Video tutorial', UMS_LANG_CODE); ?></h2>
             <div class="video-wrapper">
                 <iframe width="640" height="360" src="//www.youtube.com/v/Vqp7EJ2inQ4%26feature" frameborder="0" allowfullscreen></iframe>
             </div>
             <div class="clear"></div>
 
-            <div class="about-message"><?php esc_html_e('What to do next? Check below section', UMS_LANG_CODE);?></div>
+            <div class="about-message"><?php esc_html_e('What to do next? Check below section', UMS_LANG_CODE); ?></div>
             <div class="clear"></div>
 
            
 
  <div class="col-3">
-                <h3><?php esc_html_e('Boost us', UMS_LANG_CODE);?></h3>
-                <p><?php printf(esc_html__("It's amazing when you boost development with your feedback and ratings. So we create special <a target='_blank' href='%s'>boost page</a> to help you to help us.", UMS_LANG_CODE), 'http://supsystic.com/boost-our-plugins/');?></p>
+                <h3><?php esc_html_e('Boost us', UMS_LANG_CODE); ?></h3>
+                <p><?php printf(esc_html__("It's amazing when you boost development with your feedback and ratings. So we create special <a target='_blank' href='%s'>boost page</a> to help you to help us.", UMS_LANG_CODE), 'http://supsystic.com/boost-our-plugins/'); ?></p>
             </div>
 
             <div class="col-3">
-                <h3><?php esc_html_e('Documentation', UMS_LANG_CODE);?></h3>
-                <p><?php printf(esc_html__("Check <a target='_blank' href='%s'>documentation</a> and FAQ section. If you can't solve your problems - <a target='_blank' href='%s'>contact us</a>.", UMS_LANG_CODE), 'http://supsystic.com/product/supsystic-secure/', 'http://supsystic.com/contacts/');?></p>
+                <h3><?php esc_html_e('Documentation', UMS_LANG_CODE); ?></h3>
+                <p><?php printf(
+                  esc_html__("Check <a target='_blank' href='%s'>documentation</a> and FAQ section. If you can't solve your problems - <a target='_blank' href='%s'>contact us</a>.", UMS_LANG_CODE),
+                  'http://supsystic.com/product/supsystic-secure/',
+                  'http://supsystic.com/contacts/',
+                ); ?></p>
             </div>
 
             <div class="col-3">
-                <h3><?php esc_html_e('Full Features List', UMS_LANG_CODE);?></h3>
-                <p><?php esc_html_e("There are so many features, so we can't post it here. Like", UMS_LANG_CODE);?>:</p>
+                <h3><?php esc_html_e('Full Features List', UMS_LANG_CODE); ?></h3>
+                <p><?php esc_html_e("There are so many features, so we can't post it here. Like", UMS_LANG_CODE); ?>:</p>
                 <ul>
-                    <li><?php esc_html_e('Capcha for admin login', UMS_LANG_CODE);?></li>
-                    <li><?php esc_html_e('htaccess admin protect', UMS_LANG_CODE);?></li>
-                    <li><?php esc_html_e('Hide directory files listing', UMS_LANG_CODE);?></li>
-                    <li><?php esc_html_e('Check files and directories write permissions', UMS_LANG_CODE);?></li>
+                    <li><?php esc_html_e('Capcha for admin login', UMS_LANG_CODE); ?></li>
+                    <li><?php esc_html_e('htaccess admin protect', UMS_LANG_CODE); ?></li>
+                    <li><?php esc_html_e('Hide directory files listing', UMS_LANG_CODE); ?></li>
+                    <li><?php esc_html_e('Check files and directories write permissions', UMS_LANG_CODE); ?></li>
                 </ul>
-                <p><?php printf(esc_html__("So check full features list <a target='_blank' href='%s'>here</a>.", UMS_LANG_CODE), 'http://worumsess.org/plugins/supsystic-secure/');?></p>
+                <p><?php printf(esc_html__("So check full features list <a target='_blank' href='%s'>here</a>.", UMS_LANG_CODE), 'http://worumsess.org/plugins/supsystic-secure/'); ?></p>
             </div>
             <div class="clear"></div>
 
-            <?php echo htmlUms::hidden('pl', array('value' => esc_attr(UMS_CODE)));?>
-            <?php echo htmlUms::hidden('page', array('value' => 'supsystic_promo'));?>
-            <?php echo htmlUms::hidden('action', array('value' => 'welcomePageSaveInfo'));?>
+            <?php echo htmlUms::hidden('pl', ['value' => esc_attr(UMS_CODE)]); ?>
+            <?php echo htmlUms::hidden('page', ['value' => 'supsystic_promo']); ?>
+            <?php echo htmlUms::hidden('action', ['value' => 'welcomePageSaveInfo']); ?>
             <?php echo htmlUms::defaultNonceForAdminPanel(); ?>
-            <?php echo htmlUms::submit('gonext', array('value' => 'Thank for check info. Start using plugin.', 'attrs' => 'class="button button-primary button-hero"'));?>
-            <?php echo htmlUms::hidden('original_page', array('value' => esc_attr($this->originalPage)));?>
+            <?php echo htmlUms::submit('gonext', ['value' => 'Thank for check info. Start using plugin.', 'attrs' => 'class="button button-primary button-hero"']); ?>
+            <?php echo htmlUms::hidden('original_page', ['value' => esc_attr($this->originalPage)]); ?>
 
             <span id="toeWelcomePageFindUsMsg"></span>
         </form>

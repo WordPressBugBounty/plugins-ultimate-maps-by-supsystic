@@ -4,7 +4,7 @@
         float: left;
     }
     .umsAdminMainRightSide {
-        width: <?php echo (empty($this->optsDisplayOnMainPage) ? 100 : 40); ?>%;
+        width: <?php echo empty($this->optsDisplayOnMainPage) ? 100 : 40; ?>%;
         float: left;
         text-align: center;
     }

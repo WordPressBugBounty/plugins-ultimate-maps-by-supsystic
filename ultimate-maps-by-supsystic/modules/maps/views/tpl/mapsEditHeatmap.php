@@ -1,9 +1,8 @@
 <?php
 // TODO: Make this as it should be - in a class or a normal way, not like this
-$promoData = esc_html(frameUms::_()->getModule('supsystic_promo')->addPromoMapTabs());
-?>
+$promoData = esc_html(frameUms::_()->getModule('supsystic_promo')->addPromoMapTabs()); ?>
 
-<?php if (esc_html($this->isPro)) : ?>
+<?php if (esc_html($this->isPro)): ?>
     <form id="<?php echo esc_attr('umsHeatmapForm'); ?>">
         <table class="<?php echo esc_attr('form-table'); ?>">
             <tr>
@@ -11,7 +10,10 @@ $promoData = esc_html(frameUms::_()->getModule('supsystic_promo')->addPromoMapTa
                     <label class="<?php echo esc_attr('label-big'); ?>">
                         <?php esc_html_e('Points', UMS_LANG_CODE); ?>:
                     </label>
-                    <i style="float: right;" class="<?php echo esc_attr('fa fa-question supsystic-tooltip'); ?>" title="<?php esc_attr_e('To add Heatmap Layer points you need to activate Add Points button and draw each point by click on map. To remove points you need to activate Remove Points button and delete necessary point by click on it or just click on Delete Heatmap Layer button to remove all Heatmap Layer points. Important! You must to deactivate Add by Click and Remove by Click buttons after ending of the add / remove points.', UMS_LANG_CODE); ?>"></i>
+                    <i style="float: right;" class="<?php echo esc_attr('fa fa-question supsystic-tooltip'); ?>" title="<?php esc_attr_e(
+  'To add Heatmap Layer points you need to activate Add Points button and draw each point by click on map. To remove points you need to activate Remove Points button and delete necessary point by click on it or just click on Delete Heatmap Layer button to remove all Heatmap Layer points. Important! You must to deactivate Add by Click and Remove by Click buttons after ending of the add / remove points.',
+  UMS_LANG_CODE,
+); ?>"></i>
                 </th>
                 <td>
                     <div class="<?php echo esc_attr('umsHeatmapPointsBtns'); ?>">
@@ -38,9 +40,12 @@ $promoData = esc_html(frameUms::_()->getModule('supsystic_promo')->addPromoMapTa
                     <i style="float: right;" class="<?php echo esc_attr('fa fa-question supsystic-tooltip'); ?>" title="<?php esc_attr_e('Heatmap Layer points radius in pixels', UMS_LANG_CODE); ?>"></i>
                 </th>
                 <td>
-                    <?php echo esc_html(htmlUms::text('heatmap_opts[params][radius]', array(
+                    <?php echo esc_html(
+                      htmlUms::text('heatmap_opts[params][radius]', [
                         'value' => '',
-                        'attrs' => 'style="width: 100%;"'))); ?>
+                        'attrs' => 'style="width: 100%;"',
+                      ]),
+                    ); ?>
                 </td>
             </tr>
             <tr>
@@ -51,13 +56,25 @@ $promoData = esc_html(frameUms::_()->getModule('supsystic_promo')->addPromoMapTa
                     <i style="float: right;" class="<?php echo esc_attr('fa fa-question supsystic-tooltip'); ?>" title="<?php esc_attr_e('Heatmap Layer points opacity', UMS_LANG_CODE); ?>"></i>
                 </th>
                 <td>
-                    <?php echo esc_html(htmlUms::selectbox('heatmap_opts[params][opacity]', array(
-                        'options' => array(
-                            '0' => 0, '0.1' => 0.1, '0.2' => 0.2, '0.3' => 0.3,
-                            '0.4' => 0.4, '0.5' => 0.5, '0.6' => 0.6,
-                            '0.7' => 0.7, '0.8' => 0.8, '0.9' => 0.9, '1' => 1),
+                    <?php echo esc_html(
+                      htmlUms::selectbox('heatmap_opts[params][opacity]', [
+                        'options' => [
+                          '0' => 0,
+                          '0.1' => 0.1,
+                          '0.2' => 0.2,
+                          '0.3' => 0.3,
+                          '0.4' => 0.4,
+                          '0.5' => 0.5,
+                          '0.6' => 0.6,
+                          '0.7' => 0.7,
+                          '0.8' => 0.8,
+                          '0.9' => 0.9,
+                          '1' => 1,
+                        ],
                         'value' => '',
-                        'attrs' => 'style="width: 100%;"'))); ?>
+                        'attrs' => 'style="width: 100%;"',
+                      ]),
+                    ); ?>
                 </td>
             </tr>
             <tr>
@@ -83,19 +100,17 @@ $promoData = esc_html(frameUms::_()->getModule('supsystic_promo')->addPromoMapTa
                     <div id="<?php echo esc_attr('umsHeatmapGradientFirstColorContainer'); ?>">
 
                     </div>
-                    <?php echo esc_html(htmlUms::hidden('heatmap_opts[params][gradient][]', array('value' => '', 'attrs' => 'class="firstHeatmapColor"'))); ?>
+                    <?php echo esc_html(htmlUms::hidden('heatmap_opts[params][gradient][]', ['value' => '', 'attrs' => 'class="firstHeatmapColor"'])); ?>
                     <div id="<?php echo esc_attr('umsHeatmapGradientContainer'); ?>"></div>
                 </td>
             </tr>
             <!-- Additional form fields ... -->
         </table>
-        <?php echo esc_html(htmlUms::hidden('mod', array('value' => 'heatmap'))); ?>
-        <?php echo esc_html(htmlUms::hidden('action', array('value' => 'save'))); ?>
+        <?php echo esc_html(htmlUms::hidden('mod', ['value' => 'heatmap'])); ?>
+        <?php echo esc_html(htmlUms::hidden('action', ['value' => 'save'])); ?>
         <?php echo htmlUms::defaultNonceForAdminPanel(); ?>
-        <?php echo esc_html(htmlUms::hidden('heatmap_opts[id]', array('value' => ''))); ?>
-        <?php echo esc_html(htmlUms::hidden('heatmap_opts[map_id]', array('value' => esc_attr($this->editMap ? $this->map['id'] : '')))); ?>
+        <?php echo esc_html(htmlUms::hidden('heatmap_opts[id]', ['value' => ''])); ?>
+        <?php echo esc_html(htmlUms::hidden('heatmap_opts[map_id]', ['value' => esc_attr($this->editMap ? $this->map['id'] : '')])); ?>
     </form>
-<?php else :
-    echo esc_html($promoData['umsHeatmapTab']['content']);
-endif;
+<?php else:echo esc_html($promoData['umsHeatmapTab']['content']);endif;
 ?>

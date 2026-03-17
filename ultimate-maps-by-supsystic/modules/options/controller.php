@@ -1,21 +1,26 @@
 <?php
-class optionsControllerUms extends controllerUms {
-	public function saveGroup() {
-		$res = new responseUms();
-		if($this->getModel()->saveGroup(reqUms::get('post'))) {
-			$res->addMessage(__('Done', UMS_LANG_CODE));
-		} else
-			$res->pushError ($this->getModel('options')->getErrors());
-		return $res->ajaxExec();
-	}
-	public function getNoncedMethods() {
-		return array('saveGroup');
-	}
-	public function getPermissions() {
-		return array(
-			UMS_USERLEVELS => array(
-				UMS_ADMIN => array('saveGroup'),
-			),
-		);
-	}
+class optionsControllerUms extends controllerUms
+{
+  public function saveGroup()
+  {
+    $res = new responseUms();
+    if ($this->getModel()->saveGroup(reqUms::get('post'))) {
+      $res->addMessage(__('Done', UMS_LANG_CODE));
+    } else {
+      $res->pushError($this->getModel('options')->getErrors());
+    }
+    return $res->ajaxExec();
+  }
+  public function getNoncedMethods()
+  {
+    return ['saveGroup'];
+  }
+  public function getPermissions()
+  {
+    return [
+      UMS_USERLEVELS => [
+        UMS_ADMIN => ['saveGroup'],
+      ],
+    ];
+  }
 }
