@@ -28,7 +28,6 @@ class supsystic_promoViewUms extends viewUms
     $this->assign('faqList', $this->getFaqList());
     $this->assign('serverSettings', $this->getServerSettings());
     $this->assign('news', $this->getNewsContent());
-    $this->assign('contactFields', $this->getModule()->getContactFormFields());
     return parent::getContent('overviewTabContent');
   }
   public function getFaqList()

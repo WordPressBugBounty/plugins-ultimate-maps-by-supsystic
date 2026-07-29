@@ -21,8 +21,6 @@ class supsystic_promoUms extends moduleUms
     }
     $this->weLoveYou();
     dispatcherUms::addFilter('mainAdminTabs', [$this, 'addAdminTab']);
-    dispatcherUms::addAction('beforeSaveOpts', [$this, 'checkSaveOpts']);
-    dispatcherUms::addAction('addMapBottomControls', [$this, 'checkWeLoveYou'], 99);
     // dispatcherUms::addAction('discountMsg', array($this, 'getDiscountMsg'));
     // add_action('admin_notices', array($this, 'checkAdminPromoNotices'));
     add_action('admin_notices', [$this, 'showUserApiKeyAdminNotice']);
@@ -84,22 +82,6 @@ class supsystic_promoUms extends moduleUms
 			<a href="#" class="button" data-statistic-code="hide">' .
         __('I already did', UMS_LANG_CODE) .
         '</a></p>';
-      $enbPromoLinkMsg = sprintf(__('<h3>More then eleven days with our %s plugin - Congratulations!</h3>', UMS_LANG_CODE), UMS_WP_PLUGIN_NAME);
-      $enbPromoLinkMsg .= __("<p>On behalf of the entire <a href='https://supsystic.com/' target='_blank'>supsystic.com</a> company I would like to thank you for been with us, and I really hope that our software helped you.</p>", UMS_LANG_CODE);
-      $enbPromoLinkMsg .= __(
-        "<p>And today, if you want, - you can help us. This is really simple - you can just add small promo link to our site under your maps. This is small step for you, but a big help for us! Sure, if you don't want - just skip this and continue enjoy our software!</p>",
-        UMS_LANG_CODE,
-      );
-      $enbPromoLinkMsg .=
-        '<p><a href="#" class="button button-primary" data-statistic-code="done">' .
-        __('Ok, you deserve it', UMS_LANG_CODE) .
-        '</a>
-			<a href="#" class="button" data-statistic-code="later">' .
-        __('Nope, maybe later', UMS_LANG_CODE) .
-        '</a>
-			<a href="#" class="button" data-statistic-code="hide">' .
-        __('Skip', UMS_LANG_CODE) .
-        '</a></p>';
       // $checkOtherPlugins = '<p>'
       // 	. sprintf(__("Check out <a href='%s' target='_blank' class='button button-primary' data-statistic-code='hide'>our other Plugins</a>! Years of experience in WordPress plugins developers made those list unbreakable!", UMS_LANG_CODE), frameUms::_()->getModule('options')->getTabUrl('featured-plugins'))
       // . '</p>';
@@ -113,7 +95,6 @@ class supsystic_promoUms extends moduleUms
         '</p>';
       $notices = [
         'rate_msg' => ['html' => $rateMsg, 'show_after' => 7 * $day],
-        'enb_promo_link_msg' => ['html' => $enbPromoLinkMsg, 'show_after' => 11 * $day],
         // 'check_other_plugs_msg' => array('html' => $checkOtherPlugins, 'show_after' => 1 * $day),
         'need_google_maps' => ['html' => $needGoogleMapsMsg, 'show_after' => 0],
       ];
@@ -144,18 +125,11 @@ class supsystic_promoUms extends moduleUms
           unset($notices[$nKey]);
           continue;
         }
-        if ($nKey == 'enb_promo_link_msg' && (int) frameUms::_()->getModule('options')->get('add_love_link')) {
-          unset($notices[$nKey]);
-          continue;
-        }
       }
     } else {
       frameUms::_()->getModule('options')->getModel()->save('start_usage', $currTime);
     }
     if (!empty($notices)) {
-      if (isset($notices['rate_msg']) && isset($notices['enb_promo_link_msg']) && !empty($notices['enb_promo_link_msg'])) {
-        unset($notices['rate_msg']); // Show only one from those messages
-      }
       $html = '';
       foreach ($notices as $nKey => $n) {
         $this->getModel()->saveUsageStat($nKey . '.' . 'show', true);
@@ -281,72 +255,9 @@ class supsystic_promoUms extends moduleUms
     }
     return $this->_mainLink;
   }
-  public function getContactFormFields()
-  {
-    $fields = [
-      'name' => ['label' => __('Name', UMS_LANG_CODE), 'valid' => 'notEmpty', 'html' => 'text'],
-      'email' => ['label' => __('Email', UMS_LANG_CODE), 'html' => 'email', 'valid' => ['notEmpty', 'email'], 'placeholder' => 'example@mail.com', 'def' => get_bloginfo('admin_email')],
-      'website' => ['label' => __('Website', UMS_LANG_CODE), 'html' => 'text', 'placeholder' => 'http://example.com', 'def' => get_bloginfo('url')],
-      'subject' => ['label' => __('Subject', UMS_LANG_CODE), 'valid' => 'notEmpty', 'html' => 'text'],
-      'category' => [
-        'label' => __('Topic', UMS_LANG_CODE),
-        'valid' => 'notEmpty',
-        'html' => 'selectbox',
-        'options' => [
-          'plugins_options' => __('Plugin options', UMS_LANG_CODE),
-          'bug' => __('Report a bug', UMS_LANG_CODE),
-          'functionality_request' => __('Require a new functionallity', UMS_LANG_CODE),
-          'other' => __('Other', UMS_LANG_CODE),
-        ],
-      ],
-      'message' => ['label' => __('Message', UMS_LANG_CODE), 'valid' => 'notEmpty', 'html' => 'textarea', 'placeholder' => __('Hello Supsystic Team!', UMS_LANG_CODE)],
-    ];
-    foreach ($fields as $k => $v) {
-      if (isset($fields[$k]['valid']) && !is_array($fields[$k]['valid'])) {
-        $fields[$k]['valid'] = [$fields[$k]['valid']];
-      }
-    }
-    return $fields;
-  }
   public function isPro()
   {
     return frameUms::_()->getModule('add_map_options') ? true : false;
-  }
-  public function _checkLoveLink()
-  {
-    $apiUrl = 'https://supsystic.com/wp-admin/admin-ajax.php';
-    $reqUrl = $apiUrl . '?action=show_love_link';
-    $data = [
-      'body' => [
-        'key' => 'kJ#f3(FjkF9fasd124t5t589u9d4389r3r3R#2asdas3(#R03r#(r#t-4t5t589u9d4389r3r3R#$%lfdj',
-        'site_url' => get_bloginfo('wpurl'),
-      ],
-    ];
-    $response = wp_remote_post($reqUrl, $data);
-    $responseData = json_decode(wp_remote_retrieve_body($response), true);
-    if (!empty($responseData['data']['show'])) {
-      update_option('ums_show_love_link', true);
-    } else {
-      update_option('ums_show_love_link', false);
-    }
-  }
-  public function checkLoveLink()
-  {
-    if (!empty(get_option('ums_last_check_love_link'))) {
-      $time = time();
-      $prevSendTime = (int) get_option('ums_last_check_love_link');
-      if ($prevSendTime && $time - $prevSendTime > 24 * 60 * 60) {
-        update_option('ums_last_check_love_link', time());
-        $this->_checkLoveLink();
-      }
-    } else {
-      $this->_checkLoveLink();
-      update_option('ums_last_check_love_link', time());
-    }
-    if (!empty(get_option('ums_show_love_link'))) {
-      return true;
-    }
-    return false;
   }
   public function generateMainLink($params = '')
   {
@@ -355,47 +266,6 @@ class supsystic_promoUms extends moduleUms
       return $mainLink . (strpos($mainLink, '?') ? '&' : '?') . $params;
     }
     return $mainLink;
-  }
-  public function getLoveLink($show = 'hide')
-  {
-    if (!$this->checkLoveLink()) {
-      return false;
-    }
-    if (empty(get_option('supsystic_ums_love_link_title'))) {
-      $loveLinkTitles = ['WordPress Map Plugin', 'Google Maps Wordpress', 'WordPress Google Maps Plugin', 'Google Map Wordpress', 'Google Map Plugin', 'WP Google Maps', 'WordPress Google Maps'];
-      $randomTitle = array_rand($loveLinkTitles, 1);
-      $randomTitleVal = $loveLinkTitles[$randomTitle];
-      update_option('supsystic_ums_love_link_title', $randomTitleVal);
-    }
-    $title = get_option('supsystic_ums_love_link_title');
-    if ($show == 'show') {
-      return '<a title="' .
-        $title .
-        '" style="border:none; color: #26bfc1 !important; font-size: 9px; display: block; float: right; padding-right: 10px;" href="https://supsystic.com/plugins/google-maps-plugin/?utm_medium=love_link_hide" target="_blank">' .
-        $title .
-        '</a>' .
-        '<div style="clear: both;"></div>';
-    } elseif ($show == 'hide') {
-      return '<a title="' . $title . '" style="display:none;" href="https://supsystic.com/plugins/google-maps-plugin/?utm_medium=love_link_hide" target="_blank">' . $title . '</a>' . '<div style="clear: both;"></div>';
-    }
-  }
-  public function checkSaveOpts($newValues)
-  {
-    $loveLinkEnb = (int) frameUms::_()->getModule('options')->get('add_love_link');
-    $loveLinkEnbNew = isset($newValues['opt_values']['add_love_link']) ? (int) $newValues['opt_values']['add_love_link'] : 0;
-    if ($loveLinkEnb != $loveLinkEnbNew) {
-      $this->getModel()->saveUsageStat('love_link.' . ($loveLinkEnbNew ? 'enb' : 'dslb'));
-    }
-  }
-  public function checkWeLoveYou()
-  {
-    if (empty(frameUms::_()->getModule('options')->get('remove_love_link')) || !$this->isPro()) {
-      if (frameUms::_()->getModule('options')->get('add_love_link')) {
-        echo $this->getLoveLink('show');
-      } else {
-        echo $this->getLoveLink('hide');
-      }
-    }
   }
   public function addPromoMapTabs()
   {

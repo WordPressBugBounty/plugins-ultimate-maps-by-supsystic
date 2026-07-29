@@ -461,12 +461,6 @@ class installerUms
       'thunderforest_key' => [
         'value' => '',
       ],
-      'add_love_link' => [
-        'value' => '0',
-      ],
-      'remove_love_link' => [
-        'value' => '0',
-      ],
       'access_roles' => [
         'value' => [
           0 => 'administrator',

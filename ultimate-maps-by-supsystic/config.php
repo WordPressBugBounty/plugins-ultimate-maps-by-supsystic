@@ -52,7 +52,7 @@ define('UMS_CURRENT', 'current');
 define('UMS_EOL', "\n");
 
 define('UMS_PLUGIN_INSTALLED', true);
-define('UMS_VERSION_PLUGIN', '1.3.2');
+define('UMS_VERSION_PLUGIN', '1.3.3');
 define('UMS_USER', 'user');
 
 define('UMS_CLASS_PREFIX', 'umsc');

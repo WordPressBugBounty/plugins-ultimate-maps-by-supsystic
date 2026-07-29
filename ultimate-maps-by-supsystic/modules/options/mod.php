@@ -166,19 +166,6 @@ class optionsUms extends moduleUms
             //'api_domain' => array('label' => __('API Domain', UMS_LANG_CODE), 'desc' => __('Sets domain for google API scripts', UMS_LANG_CODE), 'def' => '', 'html' => 'selectbox', 'options' => array('https://maps.googleapis.com/' => 'https://maps.googleapis.com/', 'https://maps.google.cn/' => 'https://maps.google.cn/'), 'attrs' => 'style="width: 300px;"'),
             //'user_api_key' => array('label' => __('User API key', UMS_LANG_CODE), 'desc' => __("You can use your own Google API key, check the <a href='//supsystic.com/google-maps-api-key/' target='_blank'>instruction</a> how to create it. To use plugin's default API key leave this field blank.", UMS_LANG_CODE), 'def' => '', 'html' => 'text', 'attrs' => 'style="width: 300px;"'),
             //'send_stats' => array('label' => __('Send usage statistics', UMS_LANG_CODE), 'desc' => __('Send information about what plugin options you prefer to use, this will help us make our solution better for You.', UMS_LANG_CODE), 'def' => '0', 'html' => 'checkboxHiddenVal'),
-            'add_love_link' => [
-              'label' => __('Show promo link', UMS_LANG_CODE),
-              'desc' => __('To promote our plugin, you can show the promo link below the table, if you don\'t want to show the promo link you can also hide it. You can completely remove the link under the table by purchasing the PRO version of the plugin. Thank you for cooperation!', UMS_LANG_CODE),
-              'def' => '0',
-              'html' => 'checkboxHiddenVal',
-            ],
-            'remove_love_link' => [
-              'label' => __('Remove promo link', UMS_LANG_CODE),
-              'desc' => __('If you want to delete promo link below the table from HTML just check this box. Only for PRO users.', UMS_LANG_CODE),
-              'def' => '0',
-              'html' => 'checkboxHiddenVal',
-              'pro' => '',
-            ],
             'access_roles' => [
               'label' => __('User role can use plugin', UMS_LANG_CODE),
               'desc' => __('User with next roles will have access to whole plugin from admin area.', UMS_LANG_CODE),
