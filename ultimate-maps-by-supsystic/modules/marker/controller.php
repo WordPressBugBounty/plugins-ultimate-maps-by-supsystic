@@ -117,6 +117,14 @@ class markerControllerUms extends controllerUms
     $page = (int) sanitize_text_field(reqUms::getVar('page'));
     $rowsLimit = (int) sanitize_text_field(reqUms::getVar('rows'));
     $mapId = (int) sanitize_text_field(reqUms::getVar('map_id'));
+    if ($mapId <= 0) {
+      // Unsaved (new) map - there is nothing to list yet, never show the global orphan pool
+      $res->addData('page', 0);
+      $res->addData('total', 0);
+      $res->addData('rows', []);
+      $res->addData('records', 0);
+      return $res->ajaxExec();
+    }
     $search = reqUms::getVar('search');
     $search = !empty($search['text_like']) ? sanitize_text_field($search['text_like']) : '';
     $totalCount = $model->getTotalCountBySearch($search, $mapId);

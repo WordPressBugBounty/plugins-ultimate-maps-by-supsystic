@@ -38,7 +38,6 @@ class markerModelUms extends modelUms
       if (!$update) {
         $marker['create_date'] = date('Y-m-d H:i:s');
         if ($marker['map_id']) {
-          //$maxSortOrder = (int)dbUms::get('SELECT MAX(sort_order) FROM @__markers WHERE map_id = "' . $marker['map_id'] . '"', 'one');
           global $wpdb;
           $maxSortOrder = $wpdb->get_var("SELECT MAX(sort_order) FROM {$wpdb->prefix}ums_markers WHERE " . $wpdb->prepare('map_id = %s', $marker['map_id']));
           $marker['sort_order'] = ++$maxSortOrder;
@@ -163,7 +162,6 @@ class markerModelUms extends modelUms
       global $wpdb;
       $marker = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}ums_markers WHERE " . $wpdb->prepare('id = %s', $id), ARRAY_A);
       // $marker = frameUms::_()->getTable('marker')
-      //    ->get('*', array(
       //    'id' => $id
       // ) , '', 'row');
       if (!empty($marker)) {
@@ -180,7 +178,6 @@ class markerModelUms extends modelUms
     //   return $this->_afterGet(
     //     frameUms::_()
     //      ->getTable('marker')
-    //      ->get('*', array(
     //      'id' => $id
     //   ) , '', 'row')
     // );
@@ -192,7 +189,6 @@ class markerModelUms extends modelUms
     return $this->_afterGet($row);
     // return $this->_afterGet(frameUms::_()
     //    ->getTable('marker')
-    //    ->get('*', array(
     //    'title' => $title
     // ) , '', 'row'));
   }
@@ -203,6 +199,9 @@ class markerModelUms extends modelUms
         $marker['icon_data'] = frameUms::_()->getModule('icons')->getModel()->getIconFromId($marker['icon']);
       }
       $marker['params'] = utilsUms::unserialize($marker['params']);
+      if (!is_array($marker['params'])) {
+        $marker['params'] = [];
+      }
 
       if (isset($marker['params']['marker_title_link']) && !empty($marker['params']['marker_title_link']) && strpos($marker['params']['marker_title_link'], 'http') !== 0) {
         $marker['params']['marker_title_link'] = 'http://' . $marker['params']['marker_title_link'];
@@ -213,7 +212,9 @@ class markerModelUms extends modelUms
 
       $siteUrl = uriUms::isHttps() ? uriUms::makeHttps(UMS_SITE_URL) : UMS_SITE_URL;
       // Go to absolute path as "../wp-content/" will not work on frontend
-      $marker['description'] = str_replace('../wp-content/', $siteUrl . 'wp-content/', $marker['description']);
+      // ?? '' avoids a PHP 8.1+ deprecation warning ($marker['description'] can be null
+      // for markers saved without a description) - str_replace() returns a string either way.
+      $marker['description'] = str_replace('../wp-content/', $siteUrl . 'wp-content/', $marker['description'] ?? '');
       //Replace site url in markers descriptions frontend.
       $marker['description'] = str_replace('UMS_SITE_URL', $siteUrl, $marker['description']);
 
@@ -354,13 +355,21 @@ class markerModelUms extends modelUms
     }
     return $markerList;
   }
-  public function getTotalCountBySearch($search)
+  public function getTotalCountBySearch($search, $mapId = false)
   {
     global $wpdb;
     if (!empty($search)) {
-      $count = (int) $wpdb->get_var("SELECT COUNT(*) AS total FROM {$wpdb->prefix}ums_markers " . $wpdb->prepare('(id = %s OR title = %s)', $search, $search));
+      if ($mapId) {
+        $count = (int) $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) AS total FROM {$wpdb->prefix}ums_markers WHERE map_id = %s AND (id = %s OR title = %s)", $mapId, $search, $search));
+      } else {
+        $count = (int) $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) AS total FROM {$wpdb->prefix}ums_markers WHERE (id = %s OR title = %s)", $search, $search));
+      }
     } else {
-      $count = (int) $wpdb->get_var("SELECT COUNT(*) AS total FROM {$wpdb->prefix}ums_markers ");
+      if ($mapId) {
+        $count = (int) $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) AS total FROM {$wpdb->prefix}ums_markers WHERE map_id = %s", $mapId));
+      } else {
+        $count = (int) $wpdb->get_var("SELECT COUNT(*) AS total FROM {$wpdb->prefix}ums_markers ");
+      }
     }
     return $count;
   }
@@ -383,6 +392,8 @@ class markerModelUms extends modelUms
       $addMarkerIds = [$addMarkerIds];
     }
     $addMarkerIds = array_map('intval', $addMarkerIds);
+    global $wpdb;
+    $dbRes = false;
     foreach ($addMarkerIds as $addMarkerId) {
       $tableName = $wpdb->prefix . 'ums_markers';
       $data_update = [
@@ -390,6 +401,7 @@ class markerModelUms extends modelUms
       ];
       $data_where = [
         'id' => $addMarkerId,
+        'map_id' => 0,
       ];
       $dbRes = $wpdb->update($tableName, $data_update, $data_where);
     }
@@ -423,6 +435,7 @@ class markerModelUms extends modelUms
   }
   public function replaceDeletedIconIdToDefault($id)
   {
+    global $wpdb;
     if ($id) {
       $tableName = $wpdb->prefix . 'ums_markers';
       $data_update = [

@@ -17,7 +17,6 @@ class mapsModelUms extends modelUms
     // $maps = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}ums_maps AS toe_m WHERE " . $wpdb->prepare("id = %s", $id), ARRAY_A);
     global $wpdb;
     $maps = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}ums_maps", ARRAY_A);
-    //$maps = frameUms::_()->getTable('maps')->get('*', $d);
     if ($maps && isset($d['simple']) && $d['simple']) {
       return $maps;
     }
@@ -215,6 +214,9 @@ class mapsModelUms extends modelUms
     if (!empty($mapId)) {
       global $wpdb;
       frameUms::_()->getModule('marker')->getModel()->removeMarkersFromMap($mapId);
+      if (frameUms::_()->getModule('shape')) {
+        frameUms::_()->getModule('shape')->getModel()->removeShapesFromMap($mapId);
+      }
       $tableName = $wpdb->prefix . 'ums_maps';
       $data_where = ['id' => $mapId];
       return $res = $wpdb->delete($tableName, $data_where);
@@ -228,6 +230,10 @@ class mapsModelUms extends modelUms
     $ids = array_map('intval', $ids);
     global $wpdb;
     foreach ($ids as $id) {
+      frameUms::_()->getModule('marker')->getModel()->removeMarkersFromMap($id);
+      if (frameUms::_()->getModule('shape')) {
+        frameUms::_()->getModule('shape')->getModel()->removeShapesFromMap($id);
+      }
       $tableName = $wpdb->prefix . 'ums_maps';
       $data_where = [
         'id' => $id,
@@ -250,7 +256,6 @@ class mapsModelUms extends modelUms
       foreach ($ids as $id) {
         global $wpdb;
         $map = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}ums_maps AS toe_m WHERE " . $wpdb->prepare('id = %s', $id), ARRAY_A);
-        //if($map = frameUms::_()->getTable('maps')->get('*', array('id' => (int)$id), '', 'row')) {
         if ($map) {
           $mapId = $map['id'];
           $map = $this->prepareDataToClone($map, false, true);
@@ -267,7 +272,6 @@ class mapsModelUms extends modelUms
           if ($res) {
             $clonedMapId = $wpdb->insert_id;
           }
-          //if($clonedMapId = frameUms::_()->getTable('maps')->insert($map)) {
           if ($clonedMapId) {
             // Markers
             $markers = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}ums_markers WHERE " . $wpdb->prepare('map_id = %s', $mapId) . ' ORDER BY sort_order ASC', ARRAY_A);
@@ -292,7 +296,6 @@ class mapsModelUms extends modelUms
                 if ($dbMarkerRes) {
                   $dbMarkerResId = $wpdb->insert_id;
                 }
-                // if(!frameUms::_()->getTable('marker')->insert($marker)) {
                 if (!$dbMarkerRes) {
                   $this->pushError(frameUms::_()->getTable('marker')->getErrors());
                   return $this->haveErrors(); // To break foreach cycle
@@ -321,7 +324,6 @@ class mapsModelUms extends modelUms
                   $dbResId = $wpdb->insert_id;
                 }
                 if (!$dbRes) {
-                  //if(!frameUms::_()->getTable('shape')->insert($shape)) {
                   $this->pushError(frameUms::_()->getTable('shape')->getErrors());
                   return $this->haveErrors(); // To break foreach cycle
                 }
@@ -333,7 +335,6 @@ class mapsModelUms extends modelUms
             if (frameUms::_()->getModule('heatmap') && ($heatmap = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}ums_heatmaps WHERE " . $wpdb->prepare('map_id = %s', $mapId), ARRAY_A))) {
               $heatmap = $this->prepareDataToClone($heatmap, $clonedMapId);
 
-              // if(!frameUms::_()->getTable('heatmap')->insert($heatmap))
               // 	$this->pushError(frameUms::_()->getTable('heatmap')->getErrors());
             } else {
               $this->pushError(frameUms::_()->getTable('heatmap')->getErrors());
@@ -387,7 +388,6 @@ class mapsModelUms extends modelUms
     if (!$id) {
       return false;
     }
-    //$map = frameUms::_()->getTable('maps')->get('*', array('id' => (int)$id), '', 'row');
     global $wpdb;
     $map = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}ums_maps AS toe_m WHERE " . $wpdb->prepare('id = %s', $id), ARRAY_A);
 
@@ -415,7 +415,6 @@ class mapsModelUms extends modelUms
     if ($id) {
       global $wpdb;
       $map = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}ums_maps AS toe_m WHERE " . $wpdb->prepare('id = %s', $id), ARRAY_A);
-      //$map = frameUms::_()->getTable('maps')->get('*', array('id' => (int)$id), '', 'row');
       if (!empty($map)) {
         return true;
       }
@@ -555,9 +554,9 @@ class mapsModelUms extends modelUms
   {
     global $wpdb;
     if (!empty($search)) {
-      $data = $wpdb->get_results("SELECT id, title, create_date FROM {$wpdb->prefix}ums_maps WHERE " . $wpdb->prepare(' (id = %s OR title = %s) ORDER BY id ASC LIMIT %1s,%1s', $search, $search, (int) $limitStart, (int) $rowsLimit), ARRAY_A);
+      $data = $wpdb->get_results("SELECT id, title, create_date FROM {$wpdb->prefix}ums_maps WHERE " . $wpdb->prepare(' (id = %s OR title = %s) ORDER BY id DESC LIMIT %1s,%1s', $search, $search, (int) $limitStart, (int) $rowsLimit), ARRAY_A);
     } else {
-      $data = $wpdb->get_results("SELECT id, title, create_date FROM {$wpdb->prefix}ums_maps " . $wpdb->prepare(' ORDER BY id ASC LIMIT %1s,%1s', (int) $limitStart, (int) $rowsLimit), ARRAY_A);
+      $data = $wpdb->get_results("SELECT id, title, create_date FROM {$wpdb->prefix}ums_maps " . $wpdb->prepare(' ORDER BY id DESC LIMIT %1s,%1s', (int) $limitStart, (int) $rowsLimit), ARRAY_A);
     }
     return $data;
   }

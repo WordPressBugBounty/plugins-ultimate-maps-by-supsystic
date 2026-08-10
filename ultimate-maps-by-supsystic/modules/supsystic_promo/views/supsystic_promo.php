@@ -1,10 +1,6 @@
 <?php
 class supsystic_promoViewUms extends viewUms
 {
-  public function displayAdminFooter()
-  {
-    parent::display('adminFooter');
-  }
   public function showWelcomePage()
   {
     $this->assign('askOptions', [
@@ -27,23 +23,11 @@ class supsystic_promoViewUms extends viewUms
     $this->assign('mainLink', $this->getModule()->getMainLink());
     $this->assign('faqList', $this->getFaqList());
     $this->assign('serverSettings', $this->getServerSettings());
-    $this->assign('news', $this->getNewsContent());
     return parent::getContent('overviewTabContent');
   }
   public function getFaqList()
   {
     return [];
-  }
-  public function getNewsContent()
-  {
-    $getData = wp_remote_get('http://supsystic.com/news/main.html');
-    $content = '';
-    if ($getData && is_array($getData) && isset($getData['response']) && isset($getData['response']['code']) && $getData['response']['code'] == 200 && isset($getData['body']) && !empty($getData['body'])) {
-      $content = $getData['body'];
-    } else {
-      $content = sprintf(__("There were some problem while trying to retrive our news, but you can always check all list <a target='_blank' href='%s'>here</a>.", UMS_LANG_CODE), 'http://supsystic.com/news');
-    }
-    return $content;
   }
   public function getServerSettings()
   {
@@ -70,9 +54,4 @@ class supsystic_promoViewUms extends viewUms
     $this->assign('tabCode', $tabCode);
     return parent::getContent('adminPromoTabContent');
   }
-  // public function getDiscountMsg($buyLink = '#') {
-  // 	$this->assign('bundlePageLink', '//supsystic.com/all-plugins/');
-  // 	$this->assign('buyLink', $buyLink);
-  // 	parent::display('discountMsg');
-  // }
 }

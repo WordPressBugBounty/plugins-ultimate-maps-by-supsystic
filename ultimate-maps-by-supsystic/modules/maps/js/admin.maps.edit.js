@@ -7,7 +7,46 @@ var g_umsMap = null,
   g_umsMarkerTitleColorLast = '',
   g_umsMarkerBgColorTimeoutSet = false,
   g_umsMapAuthorizationFailWnd = false,
-  g_umsIsNeedTriggerZoomTypeAdmin = false;
+  g_umsIsNeedTriggerZoomTypeAdmin = false,
+  g_umsPendingTabAfterSave = '';
+
+function umsShowSaveMapFirstDialog(targetTab) {
+  var $dlg = getDialogElementUms();
+  $dlg.html(
+    '<p>' +
+      toeLangUms('This map has not been saved yet.') +
+      '</p><p>' +
+      toeLangUms('Please save the map first before adding markers, figures or other elements to it.') +
+      '</p>'
+  );
+  $dlg.dialog({
+    title: toeLangUms('Save the map first'),
+    modal: true,
+    resizable: false,
+    width: 420,
+    dialogClass: 'umsSaveMapFirstDialog',
+    buttons: [
+      {
+        text: toeLangUms('Save map and continue'),
+        'class': 'button button-primary',
+        click: function () {
+          g_umsPendingTabAfterSave = targetTab;
+          $dlg.dialog('close');
+          jQuery('#umsMapSaveBtn').trigger('click');
+        },
+      },
+      {
+        text: toeLangUms('Cancel'),
+        click: function () {
+          $dlg.dialog('close');
+        },
+      },
+    ],
+    close: function () {
+      $dlg.dialog('destroy').remove();
+    },
+  });
+}
 window.onbeforeunload = function () {
   // TODO: Uncomment after main development will be ready
   // If there are at lease one unsaved form - show message for confirnation for page leave
@@ -38,7 +77,22 @@ jQuery(document).ready(function () {
     heatmapMainBtns = jQuery('#umsHeatmapMainBtns'),
     markerList = jQuery('#umsMarkerList'),
     shapeList = jQuery('#umsShapeList'),
-    rightStickyBar = jQuery('#umsMapRightStickyBar');
+    rightStickyBar = jQuery('#umsMapRightStickyBar'),
+    umsUnsavedMapTabs = ['#umsMarkerTab', '#umsShapeTab', '#umsHeatmapTab'];
+
+  // Block switching to Markers/Figures/Heatmap tabs until a new map is saved
+  propTabs
+    .find('.nav-tab-wrapper:first')
+    .find('a.nav-tab:not(.notTab)')
+    .on('click', function (e) {
+      var targetTab = jQuery(this).attr('href');
+      if (!g_umsEditMap && jQuery.inArray(targetTab, umsUnsavedMapTabs) !== -1) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        umsShowSaveMapFirstDialog(targetTab);
+        return false;
+      }
+    });
 
   propTabs.wpTabs({
     change: function (selector) {
@@ -191,31 +245,30 @@ jQuery(document).ready(function () {
               });
 
               // Update Shapes table link
-              /*if(UMS_DATA.isPro) {
-								var shParams = URLToArray(umsShapesTblDataUrl)
-								,	newShapesTblUrl = umsShapesTblDataUrl.substring(0, umsShapesTblDataUrl.indexOf('?') + 1);
+              if (UMS_DATA.isPro) {
+                var shParams = URLToArray(umsShapesTblDataUrl),
+                  newShapesTblUrl = umsShapesTblDataUrl.toString().substring(0, umsShapesTblDataUrl.indexOf('?') + 1);
 
-								shParams['map_id'] = res.data.map_id;
-								shParams = ArrayToURL(shParams);
-								newShapesTblUrl += shParams;
-								jQuery("#umsShapesListGrid").jqGrid('setGridParam', { url: newShapesTblUrl });
-							}*/
+                shParams['map_id'] = res.data.map_id;
+                shParams = ArrayToURL(shParams);
+                newShapesTblUrl += shParams;
+                jQuery('#umsShapesListGrid').jqGrid('setGridParam', { url: newShapesTblUrl });
+              }
             }
             if (firstTime) {
-              // Do reload here
               umsCheckShortcode();
               if (res.data.edit_url) {
-                toeRedirect(res.data.edit_url);
+                var redirectUrl = res.data.edit_url;
+                if (g_umsPendingTabAfterSave) {
+                  redirectUrl += g_umsPendingTabAfterSave;
+                }
+                _umsUnchangeMapForm();
+                toeRedirect(redirectUrl);
                 return;
-                /*setBrowserUrl( res.data.edit_url );
-								jQuery('.supsystic-main-navigation-list li').removeClass('active');
-								jQuery('.supsystic-main-navigation-list li[data-tab-key="maps"]').addClass('active');*/
               }
-              /*g_umsMapMarkersIdsAdded = [];
-							g_umsMapShapesIdsAdded = [];
-							umsMainMap = res.data.map;*/
-              // #227
-              // window.location.reload();
+              g_umsMapMarkersIdsAdded = [];
+              g_umsMapShapesIdsAdded = [];
+              umsMainMap = res.data.map;
             }
             if (_umsIsMarkerFormChanged() && jQuery('#umsMarkerForm input[name="marker_opts[title]"]').val() != '') {
               jQuery('#umsMarkerForm').submit();

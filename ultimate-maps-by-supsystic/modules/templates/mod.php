@@ -17,7 +17,7 @@ class templatesUms extends moduleUms
         $this->loadJqueryUi();
         //$this->loadChosenSelects();
 
-        frameUms::_()->addScript('umsAcPromoScript', UMS_JS_PATH . 'acPromoScript.js');
+        // acPromoStyle.css also carries shared admin layout rules, not just promo styling - keep the style enqueue
         frameUms::_()->addStyle('umsAcPromoStyle', UMS_CSS_PATH . 'acPromoStyle.css');
 
         frameUms::_()->addScript('adminOptionsUms', UMS_JS_PATH . 'admin.options.js', [], false, true);
@@ -80,29 +80,7 @@ class templatesUms extends moduleUms
         'rapidapiKey' => frameUms::_()->getModule('options')->get('rapidapi_key'),
       ];
       if (is_admin()) {
-        // delete_option('ums_ac_remind');
-        // delete_option('ums_ac_subscribe');
-        // delete_option('ums_ac_disabled');
         $jsData['isPro'] = frameUms::_()->getModule('supsystic_promo')->isPro();
-        $show = true;
-        $acRemind = get_option('ums_ac_remind', false);
-        if (!empty($acRemind)) {
-          $currentDate = date('Y-m-d h:i:s');
-          if ($currentDate > $acRemind) {
-            $show = true;
-          } else {
-            $show = false;
-          }
-        }
-        $acSubscribe = get_option('ums_ac_subscribe', false);
-        if (!empty($acSubscribe)) {
-          $show = false;
-        }
-        $acDisabled = get_option('ums_ac_disabled', false);
-        if (!empty($acDisabled)) {
-          $show = false;
-        }
-        $jsData['umsAcShow'] = $show;
       }
       $jsData = dispatcherUms::applyFilters('jsInitVariables', $jsData);
 

@@ -47,7 +47,6 @@ class csvControllerUms extends controllerUms
       $r++;
     }
     $csvGenerator->generate();
-    frameUms::_()->getModule('supsystic_promo')->getModel()->saveUsageStat('csv.export.maps');
     exit();
   }
   public function exportMarkers()
@@ -90,7 +89,6 @@ class csvControllerUms extends controllerUms
       $r++;
     }
     $csvGenerator->generate();
-    frameUms::_()->getModule('supsystic_promo')->getModel()->saveUsageStat('csv.export.markers');
     exit();
   }
   public function import()
@@ -203,7 +201,6 @@ class csvControllerUms extends controllerUms
         $res->pushError(__('Empty data in file', UMS_LANG_CODE));
       }
     }
-    frameUms::_()->getModule('supsystic_promo')->getModel()->saveUsageStat('csv.import');
     $res->ajaxExec();
   }
   public function saveCsvOptions()

@@ -1,3 +1,10 @@
+.umsSaveMapFirstDialog p {
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+.umsSaveMapFirstDialog p:last-child {
+  margin-bottom: 0;
+}
 /*.umsInfoWindowtitle {
 	font-size: 19px;
 	font-weight: bold !important;

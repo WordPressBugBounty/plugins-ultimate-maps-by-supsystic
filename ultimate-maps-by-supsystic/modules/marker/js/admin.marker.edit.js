@@ -204,7 +204,7 @@ jQuery(window).on('load', function () {
               }
             }
 
-            if (!currentMarkerMapId) {
+            if (!currentMapId) {
               g_umsMapMarkersIdsAdded.push(res.data.marker.id);
             }
             if (!onlySave) {

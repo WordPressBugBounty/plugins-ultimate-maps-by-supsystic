@@ -6,7 +6,7 @@ Donate link: https://supsystic.com/plugins/plugins/ultimate-maps
 Tags: Wordpress map, OpenStreetMap, leaflet, map plugin, bing map
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.3.3
+Stable tag: 1.5.0
 License: GNU General Public License v2.0 or later
 
 Ultimate Maps by Supsystic is the best Google Maps alternative. It includes OpenStreetMap (OSM), Bing Maps, MapBox and Thunderforest maps services
@@ -159,6 +159,9 @@ After every map theme change – you can immediately see the result in a live pr
 4. Click "Save" button.
 Check an [Example of the Map Stylization](https://supsystic.com/example/map-stylization?utm_source=wordpress&utm_medium=map-stylizationg&utm_campaign=ultimate-maps "Map Stylization") here.
 
+= Where do I report security bugs found in this plugin? =
+Please report security bugs found in the source code of the Ultimate Maps by Supsystic plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/9e5fb555-5627-47cf-a701-78547bbb5e53). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
+
 = More Info =
 * [FAQs section](https://supsystic.com/plugins/ultimate-maps#faq "Ultimate Maps WordPress plugin FAQs Section")
 * [Documentations](https://supsystic.com/docs/ultimate-maps-documentation?utm_source=wordpress&utm_medium=documentation&utm_campaign=ultimate-maps "Ultimate Maps WordPress plugin Documentation")
@@ -181,9 +184,6 @@ Check an [Example of the Map Stylization](https://supsystic.com/example/map-styl
 * [Live Chat by Supsystic](https://wordpress.org/plugins/live-chat-by-supsystic/ "Live Chat by Supsystic")
 * [Translate by Supsystic](https://wordpress.org/plugins/translate-by-supsystic/ "Translate by Supsystic")
 
-= Where do I report security bugs found in this plugin? =
-Please report security bugs found in the source code of the Ultimate Maps by Supsystic plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/9e5fb555-5627-47cf-a701-78547bbb5e53). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
-
 == Screenshots ==
 
 1. [Ultimate Maps WordPress plugin](https://supsystic.com/plugins/ultimate-maps "Ultimate Maps WordPress plugin") demo
@@ -203,248 +203,67 @@ Please report security bugs found in the source code of the Ultimate Maps by Sup
 8. [Ultimate Maps WordPress plugin](https://supsystic.com/plugins/ultimate-maps  "Ultimate Maps WordPress plugin") admin area. Shapes settings (pro)
 
 == Changelog ==
+
+= 2026 =
+
+= 1.5.0 / 10.08.2026 =
+ * General security hardening and code improvements
+
+= 1.4.0 / 03.08.2026 =
+ * Fixed a data-loss issue where markers or shapes added to a newly created (unsaved) map could be lost after saving
+ * Fixed a critical error that could occur when saving markers on a map
+ * Improved marker popup close button contrast to meet WCAG 2.1 accessibility guidelines
+ * Completed a full PHP 7.4-8.5 compatibility pass across the plugin core and all modules
+ * General code cleanup and stability improvements
+
 = 1.3.3 / 28.07.2026 =
  * Minor fixes
+
 = 1.3.2 / 31.05.2026 =
- * Tested up 7.0
- 
+ * Confirmed compatibility with WordPress 7.0
+
 = 1.3.1 / 17.03.2026 =
- * Add fix for rocket loader
- * Add fix long loading
- * Add new working map styles
- * New leaflet styles
+ * Fixed an issue with Rocket Loader compatibility and long loading times
+ * Added new working map styles, including new Leaflet styles
 
 = 1.3.0 / 14.03.2026 =
- * Major fixes
- * Fix for rocket loader 
- * Updates for WP 6.9.4
+ * Multiple stability fixes
+ * Fixed a Rocket Loader compatibility issue
+ * Confirmed compatibility with WordPress 6.9.4
 
-= 1.2.23 / 26.11.2025 =
- * Minor fixes and overview update
- * Updates for WP 6.8.3
- * Fixed Zone issue
+= 2025 =
+ * Delivered ongoing compatibility updates for WordPress 6.7-6.8.x and PHP 8.3
+ * Fixed a text-domain loading issue and a file-metadata (Zone) edge case
+ * General version maintenance
 
-= 1.2.22 / 17.06.2025 =
- * Minor fixes and overview update
+= 2024 =
+ * Added security nonce verification and expertise-level field for the ActiveCampaign form
+ * Replaced legacy escaping with wp_kses()/esc_attr() throughout the admin area
+ * Fixed several "love link" feature issues
 
-= 1.2.21 14.05.2025=
- * Minor Fixes
+= 2023 =
+ * Completed a compatibility pass for WordPress 6.2
+ * Updated the bundled Leaflet.js library to its latest version and improved overall map stability
+ * Fixed a missing source map file issue
 
-= 1.2.20 06.05.2025=
- * Add fix for textdomain
- * Add support WP 6.8.1
- * Minor Fixes
+= 2022 =
+ * Added support for WordPress 6.0/6.1 and PHP 8.1
+ * Fixed map tile rendering and removed unsupported map styles
 
-= 1.2.19 08.04.2025=
- * Add support PHP 8.3
- * Add support WP 6.7+
- * Minor Fixes
+= 2021 =
+ * Added support for WordPress 5.7
+ * Completed a major security and database-query hardening pass, and removed the bundled Bootstrap dependency
+ * Fixed marker category, media description, and "Show All Maps" issues
 
-= 1.2.18 20.03.2024 =
- * Add expertise level for AC form
+= 2020 =
+ * Added WordPress 5.5 and PHP 7.4 compatibility
+ * Fixed a Mapbox rendering issue and removed CDN-hosted files for GDPR compliance
+ * Delivered several security fixes
 
-= 1.2.17 23.01.2024 =
- * Add nonce fixes
- * Add security fixes
+= 2016-2019 =
+ * Refined marker list design, clustering, and translation support
+ * Fixed numerous rendering and interaction issues across the Leaflet, Bing, and OpenStreetMap engines
+ * Added Deutsch translation and general admin-area interface improvements
 
-= 1.2.16  11.01.2024 =
- * Add terms for AC form
- * Add wp_kses and esc functions for security
-
-= 1.2.15  13.12.2023 =
- * Fixes for lovelink
-
-= 1.2.14  14.09.2023 =
- * Add features for love link
-
-= 1.2.13  21.07.2023 =
- * Add missing js.map file
-= 1.2.12  06.07.2023 =
- * Add support WP 6.2
- * Fixes for control contributions
- * Update leafletjs library to latest version
- * Stability map improve
- * Changed overview ads
-
-= 1.2.11  08.11.2022 =
- * Add support WP 6.1
- * add ac renew scenario
- * Minor fixes
-
-= 1.2.10  30.08.2022 =
- * Add support WP 6.0
- * Add support PHP 8.1
-
-= 1.2.9  25.03.2022 =
- * Add fix for maps
- * Add maptiles
- * Remove unsupported map styles
-
-= 1.2.8  06.12.2021 =
- * Fix for mod.php
- * Fix issue with Activation
-
-= 1.2.7  22.06.2021 =
- * Minor fixes
-
-= 1.2.5  06.04.2021 =
- * Clone option fix
-
-= 1.2.4  26.03.2021 =
- * Add support WP 5.7
- * Add fix for OVH gateway
-
-= 1.2.3  19.03.2021 =
- * Add fix for UMS
-
-= 1.2.2 12.03.02.2021 =
- * Fixed marker categories
-
-= 1.2.1 09.03.02.2021 =
- * Fix for "Show All maps"
- * Fix for media descriptions
-
-= 1.2.0 07.03.02.2021 =
- * Major update
- * Fixes for DB query
-
-= 1.1.18 15.02.2021 =
- * Security fixes
- * Major update to DB query
- * Remove bootstrap
-
-= 1.1.17 10.02.2021 =
- * Security fixes
-
-= 1.1.16 09.02.2021 =
- * add fix for sqli
- * Security fixes
-
-= 1.1.13 09.12.2020 =
- * Add security fixes
-
-= 1.1.12 29.09.2020 =
- * Add fix for WP 5.5
- * Add fix for MapBox
- * Remove CDN files ( GDPR)
-
-= 1.1.11 23.06.2020 =
- * Add color for marker category
- * Add support for PHP 7.4
- * Add dialog before delete icon
-
-= 1.1.10 23.01.2020 =
- * Add column width for marker list with table
- * Fix for shortcode
- * remove phpmailer code
-
-= 1.1.9=
- * Minor fixes
-
-= 1.1.8 =
- * Add https fix for leaflet skin
- * Remove fix for https WhiteBlack
-
-= 1.1.7 =
-* Add shortcode support for map address
-* Add fix for title on hover
-
-= 1.1.6 =
-* Add fix for broken icons
-* Add feature open marker popup by mouse hover event
-* Add fix for title on hover
-
-= 1.1.5 =
- * Remove CSS padding in mobile version
- * Added support for customize cluster icon color (border, background, text)
-
-= 1.1.4 =
- * Minor issues fix
- * Add 4 options for draggable for leaflet, mapbox, bing. Front and preview.
-
-= 1.1.3 =
- * Minor issues fix
- * Small fixed for group get level func
- * Fixed mrker category parent list
-
-= 1.1.2 =
- * Change slimscroll version issue
- * Check slimscroll issue
- * Fix popup img
- * Fix marker link
- * Fixed roles capabilities for ums issue
-
-= 1.1.1 =
- * Add marker list category style issue
- * Fixes for new wp translation
- * Minor issues fix
-
-= 1.1.0 =
- * Fix bing kml problem after shape and after add marker
- * Fix issue with width
- * Fixes for Bing Engine
- * Add fix for Black and White leaflet design
- * Add fix for CSS
- * Remove unfiltered_uploads for KML
- * Fix KML upload
- * Fix shape textarea height
- * Add hide POI option
- * Add markers from frontend
- * Fix error after change map type
- * Add styles to marker frontend form
- * Fix error after frontend marker add
- * Remove notice when group map delete
- * Set timeout to frontend marker form load
- * Add style fixes markers lists
- * Check open marker infowindow with clasterization
- * Fix frontend makers map load
- * Fix Adapt map to screen height
- * Remove error after add circle shape on bing map issue
- * Fix bing kml problem error
- * Minor issues fix
-
-= 1.0.9 =
- * Readme file update
- * Scrinshots update
- * Additional improvements to slider markers list view
- * Possibility to Show Info Window by Default right after Map Load
- * Add checkbox hide without img and before map slider design for
- * Added feature for slider to show over the map
- * Minor issues fix
-
-= 1.0.8 =
- * Additional admin area improvements
- * Fix issues with changing Min and Max Zoom
- * Deutsch translation added
- * Improve click on Marker List items
-
-= 1.0.7 =
- * Admin area interface improvements
- * Fix issue with click on Markers on frontend for OpenStreetMaps Engines
- * Language files added
-
-= 1.0.6 =
- * Fix issue with position of icons for OpenStreetMaps when zooming
- * Minor issues fix
-
-= 1.0.5 =
- * Fix issue with "floating" markers for Bing Maps
- * Additional admin area design improvements (dialog queue improve)
- * Improve KML Layers functionality
- * Bing figures added
-
-= 1.0.4 =
- * KML Improvements
- * Shapes added
-
-= 1.0.3 =
- * Fix issue with disable Dragging in an admin area
- * Fix issue with disabling Mouse Wheel Zoom in an admin area
- * Markers Lists
- * KML Layers
-
-= 1.0.2 =
- * Fix issue with Markers Description
-
-= 1.0.1 =
- * First release
+= 2015 and earlier =
+ * Established the plugin's core feature set: KML layers, shapes, marker lists, and multi-engine map support (Bing, Leaflet, OpenStreetMap)

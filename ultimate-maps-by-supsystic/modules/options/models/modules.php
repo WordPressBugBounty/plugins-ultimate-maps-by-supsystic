@@ -14,15 +14,18 @@ class modulesModelUms extends modelUms
     $d = prepareParamsUms($d);
     if (is_numeric($id) && $id) {
       if (isset($d['active'])) {
-        $d['active'] = (is_string($d['active']) && $d['active'] == 'true') || $d['active'] == 1 ? 1 : 0;
+        // Loose `== 1` here used to accept any truthy-looking value under PHP 7's
+        // looser numeric-string comparisons; filter_var() is version-stable and
+        // avoids a module silently landing on active=0 from an unexpected value type.
+        $d['active'] = filter_var($d['active'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
       }
       global $wpdb;
       $tableName = $wpdb->prefix . 'ums_modules';
       $data_where = [
         'id' => $id,
       ];
-      $res = $wpdb->update($tableName, $d, $data_where);
-      if ($res) {
+      $updateResult = $wpdb->update($tableName, $d, $data_where);
+      if ($updateResult !== false) {
         $mod = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}ums_modules WHERE " . $wpdb->prepare('id = %s', $id), ARRAY_A);
         $mod = !empty($mod) ? $mod : false;
         if (is_array($mod) && !isset($mod['type_id'])) {

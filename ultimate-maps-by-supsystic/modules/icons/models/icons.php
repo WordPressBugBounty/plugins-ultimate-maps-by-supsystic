@@ -15,7 +15,6 @@ class iconsModelUms extends modelUms
   }
   public function getIconsByIds($ids)
   {
-    //$icons = frameUms::_()->getTable('icons')->get('*', array('additionalCondition' => 'id IN ('. implode(',', $ids). ')'));
     global $wpdb;
     $ids = implode(',', array_map('absint', $ids));
     $icons = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->prefix}ums_icons WHERE id IN (%1s)", $ids), ARRAY_A);
@@ -52,7 +51,6 @@ class iconsModelUms extends modelUms
       return false;
     }
     $url = $params['url'];
-    //$exists = frameUms::_()->getTable('icons')->get("*", "`path`='".$url."'");
     global $wpdb;
     $exists = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}ums_icons WHERE " . $wpdb->prepare('path = %s', $url), ARRAY_A);
     if (!empty($exists)) {
@@ -66,7 +64,6 @@ class iconsModelUms extends modelUms
       'width' => $params['width'],
       'height' => $params['height'],
     ]);
-    // return frameUms::_()->getTable('icons')->insert(array(
     // 	'path' => $url,
     // 	'title' => $params['title'],
     // 	'description' => $params['description'],
@@ -169,7 +166,6 @@ class iconsModelUms extends modelUms
   {
     global $wpdb;
     $res = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}ums_icons WHERE " . $wpdb->prepare('id = %s', $id), ARRAY_A);
-    //$res = frameUms::_()->getTable('icons')->get('*', array('id' => $id));
     if (empty($res)) {
       return $res;
     }
@@ -199,7 +195,6 @@ class iconsModelUms extends modelUms
   {
     global $wpdb;
     return $res = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}ums_icons WHERE " . $wpdb->prepare('id = %s', $iconId), ARRAY_A);
-    //return frameUms::_()->getTable('icons')->exists($iconId, 'id');
   }
   public function remove($d = [])
   {
