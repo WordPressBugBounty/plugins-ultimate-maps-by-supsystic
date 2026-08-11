@@ -16,6 +16,9 @@ class optionsModelUms extends modelUms
   }
   public function save($optKey, $val, $ignoreDbUpdate = false)
   {
+    if ($optKey === 'def_engine' && !array_key_exists($val, frameUms::_()->getModule('maps')->getEngines())) {
+      return;
+    }
     $this->_loadOptValues();
     if (!isset($this->_values[$optKey]) || $this->_values[$optKey]['value'] !== $val) {
       if (isset($this->_values[$optKey]) || !isset($this->_values[$optKey]['value'])) {

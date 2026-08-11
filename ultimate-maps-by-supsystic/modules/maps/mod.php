@@ -17,9 +17,6 @@ class mapsUms extends moduleUms
   public function checkDefEngine()
   {
     $engineFromReq = reqUms::getVar('ums_engine');
-    // Only accept one of the actual known engine codes: this value ends up building
-    // a JS variable name for wp_localize_script() elsewhere, so anything else here
-    // is a code-injection vector, not a legitimate engine selection.
     if (!empty($engineFromReq) && array_key_exists($engineFromReq, $this->getEngines())) {
       frameUms::_()->getModule('options')->getModel()->save('def_engine', $engineFromReq, true);
     }

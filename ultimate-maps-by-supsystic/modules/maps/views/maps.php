@@ -77,8 +77,6 @@ class mapsViewUms extends viewUms
       case 'leaflet':
         $fullEngineSlugName = explode('-', $fullEngine);
         $leafletTypesName = 'umsLeaFletTypes__' . (isset($fullEngineSlugName[1]) ? $fullEngineSlugName[1] : $fullEngineSlugName[0]);
-        // wp_localize_script() prints this name verbatim as a JS identifier with no
-        // escaping, so it must never contain anything but safe identifier characters.
         $leafletTypesName = preg_replace('/[^A-Za-z0-9_]/', '', $leafletTypesName);
         frameUms::_()->addJSVar($assetPrimaryName, $leafletTypesName, $this->_getMapLeaFletTypes($fullEngine));
         break;
