@@ -6,6 +6,36 @@ function umsLeafletMarker(map, params) {
   //this._mapEntryId = 0;
 }
 extendUms(umsLeafletMarker, umsBaseMarker);
+umsLeafletMarker._fixIconStylesPriority = function () {
+  if (typeof L === 'undefined' || !L.Icon || !L.Icon.prototype || L.Icon.prototype._umsFixIconStylesPriority) {
+    return;
+  }
+  var setIconStyles = L.Icon.prototype._setIconStyles;
+  if (typeof setIconStyles !== 'function') {
+    return;
+  }
+
+  L.Icon.prototype._setIconStyles = function (img, name) {
+    setIconStyles.call(this, img, name);
+
+    var options = this.options,
+      size = L.point(options[name === 'shadow' ? 'shadowSize' : 'iconSize']),
+      anchor =
+        name === 'shadow' && options.shadowAnchor
+          ? L.point(options.shadowAnchor)
+          : options.iconAnchor
+            ? L.point(options.iconAnchor)
+            : size
+              ? size.divideBy(2, true)
+              : null;
+
+    if (anchor) {
+      img.style.setProperty('margin-left', -anchor.x + 'px', 'important');
+      img.style.setProperty('margin-top', -anchor.y + 'px', 'important');
+    }
+  };
+  L.Icon.prototype._umsFixIconStylesPriority = true;
+};
 /*umsLeafletMarker.prototype.init = function() {
 	this._ignoreBaseInfoWndBind = true;
 	umsLeafletMarker.superclass.init.apply(this, arguments);
@@ -123,6 +153,8 @@ umsLeafletMarker.prototype.setIcon = function (iconPath) {
   this._markerObj.setIcon(this._iconObj);
 };
 umsLeafletMarker.prototype._createIcon = function (iconPath) {
+  umsLeafletMarker._fixIconStylesPriority();
+
   var opts = {
     iconUrl: iconPath,
   };
