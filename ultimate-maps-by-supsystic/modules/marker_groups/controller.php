@@ -106,13 +106,13 @@ class marker_groupsControllerUms extends controllerUms
   }
   public function getNoncedMethods()
   {
-    return ['getAllMarkerGroups', 'save', 'remove'];
+    return ['getAllMarkerGroups', 'save', 'remove', 'removeGroup'];
   }
   public function getPermissions()
   {
     return [
       UMS_USERLEVELS => [
-        UMS_ADMIN => ['getAllMarkerGroups', 'save', 'remove'],
+        UMS_ADMIN => ['getAllMarkerGroups', 'save', 'remove', 'removeGroup'],
       ],
     ];
   }

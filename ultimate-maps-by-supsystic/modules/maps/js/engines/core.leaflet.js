@@ -6,6 +6,7 @@ function umsLeafletMap(elementId, mapData, engine) {
   this._scaleControl = null;
   this._provider = false;
   this._providerData = null;
+  this._mainLayerType = null;
   umsLeafletMap.superclass.constructor.apply(this, arguments);
 }
 extendUms(umsLeafletMap, umsBaseMap);
@@ -63,15 +64,18 @@ umsLeafletMap.prototype._createMapObj = function () {
   this._mainLayer = this._createMainLayer();
 };
 umsLeafletMap.prototype._createMainLayer = function (provider) {
-  var typeUrl = '';
+  var typeUrl = '',
+    typeData = null;
 
   this._providerData = this._getProviderData(this._provider);
   if (this._providerData) {
     typeUrl = this._providerData.url;
   } else if (typeof this._mapParams.map_type !== 'undefined' && this._mapTypeExists(this._mapParams.map_type)) {
     typeUrl = this._providerData && this._providerData.typeToUrl ? this._providerData.typeToUrl(this._mapParams.map_type) : this._mapParams.map_type;
+    typeData = this._getMapTypeData(typeUrl);
   } else {
     typeUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    typeData = this._getMapTypeData(typeUrl);
   }
   var props = {
     attribution: this._getAttributions(typeUrl),
@@ -84,7 +88,27 @@ umsLeafletMap.prototype._createMainLayer = function (provider) {
       props = this._providerData.prepareProps(props);
     }
   }
-  return L.tileLayer(typeUrl, props).addTo(this._mapObj);
+  this._mainLayerType = typeUrl;
+  return this._createLayerByType(typeUrl, typeData, props).addTo(this._mapObj);
+};
+umsLeafletMap.prototype._createLayerByType = function (typeUrl, typeData, props) {
+  if (typeData && typeData.layer === 'maplibre') {
+    return this._createMapLibreLayer(typeData);
+  }
+  return L.tileLayer(typeUrl, props);
+};
+umsLeafletMap.prototype._createMapLibreLayer = function (typeData) {
+  if (typeof L.maplibreGL === 'function' && typeof maplibregl !== 'undefined') {
+    return L.maplibreGL({
+      style: typeData.style,
+    });
+  }
+  if (window.console && console.error) {
+    console.error('OpenFreeMap requires MapLibre GL and the Leaflet MapLibre GL plugin.');
+  }
+  return L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: this._getAttributions('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+  });
 };
 umsLeafletMap.prototype._getProviders = function () {
   if (!this._providers) {
@@ -267,8 +291,14 @@ umsLeafletMap.prototype.getNavigationBarMode = function () {
 umsLeafletMap.prototype.setMapType = function (mapType) {
   if (this._providerData && this._providerData.typeToUrl) {
     this._mainLayer.setUrl(this._providerData.typeToUrl(mapType));
-  } else {
-    this._mainLayer.setUrl(mapType);
+  } else if (this._mapTypeExists(mapType)) {
+    if (this._mainLayer) {
+      this._mapObj.removeLayer(this._mainLayer);
+    }
+    this._mainLayerType = mapType;
+    this._mainLayer = this._createLayerByType(mapType, this._getMapTypeData(mapType), {
+      attribution: this._getAttributions(mapType),
+    }).addTo(this._mapObj);
   }
 };
 umsLeafletMap.prototype.geocodeQuery = function (search, clb, errorClb) {
@@ -332,6 +362,10 @@ umsLeafletMap.prototype._mapTypeExists = function (typeUrl) {
 		return true;*/
   return false;
 };
+umsLeafletMap.prototype._getMapTypeData = function (typeUrl) {
+  this._getMapTypes();
+  return this._mapTypes[typeUrl] ? this._mapTypes[typeUrl] : false;
+};
 umsLeafletMap.prototype._getMapTypes = function () {
   if (!this._mapTypes) {
     var attr = '';
@@ -346,6 +380,8 @@ umsLeafletMap.prototype._getMapTypes = function () {
     for (var typeName in window[typesVarName]) {
       if (typeof window[typesVarName][typeName] === 'object') {
         attr = window[typesVarName][typeName]['attr'];
+        this._mapTypes[typeName] = jQuery.extend({}, window[typesVarName][typeName]);
+        continue;
       }
       this._mapTypes[typeName] = {
         attr: attr,
@@ -356,7 +392,7 @@ umsLeafletMap.prototype._getMapTypes = function () {
 };
 umsLeafletMap.prototype._getAttributions = function (typeUrl) {
   this._getMapTypes();
-  return this._mapTypes[typeUrl].attr;
+  return this._mapTypes[typeUrl] ? this._mapTypes[typeUrl].attr : '';
 };
 umsLeafletMap.prototype.enableClasterization = function (clasterType, needTrigger) {
   switch (clasterType) {

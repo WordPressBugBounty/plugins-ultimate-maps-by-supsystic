@@ -64,7 +64,7 @@ class mapsViewUms extends viewUms
     }
     return $this->_mapsApiUrls[$engine];
   }
-  private function _connectApiAssets($engine, $fullEngine)
+  private function _connectApiAssets($engine, $fullEngine, $map = [], $forAdminArea = false)
   {
     $assetPrimaryName = 'ums_' . $engine . '_maps_api';
     switch ($engine) {
@@ -73,6 +73,9 @@ class mapsViewUms extends viewUms
         break;
     }
     frameUms::_()->addScript($assetPrimaryName, $this->_getApiUrl($engine));
+    if ($engine == 'leaflet' && $this->_shouldConnectMapLibreAssets($fullEngine, $map, $forAdminArea)) {
+      $this->_connectMapLibreAssets($assetPrimaryName);
+    }
     switch ($engine) {
       case 'leaflet':
         $fullEngineSlugName = explode('-', $fullEngine);
@@ -91,6 +94,26 @@ class mapsViewUms extends viewUms
         frameUms::_()->addScript('ums_' . $engine . '_markercluster_api', frameUms::_()->getModule('maps')->getModPath() . 'js/assets/leaflet.markercluster.js');
         break;
     }
+  }
+  private function _connectMapLibreAssets($leafletHandle)
+  {
+    frameUms::_()->addStyle('ums_maplibre_gl_css', frameUms::_()->getModule('maps')->getModPath() . 'js/assets/maplibre-gl/maplibre-gl.css', [], '5.24.0');
+    frameUms::_()->addScript('ums_maplibre_gl_js', frameUms::_()->getModule('maps')->getModPath() . 'js/assets/maplibre-gl/maplibre-gl.js', [], '5.24.0');
+    frameUms::_()->addScript('ums_maplibre_gl_leaflet_js', frameUms::_()->getModule('maps')->getModPath() . 'js/assets/maplibre-gl-leaflet/leaflet-maplibre-gl.js', [$leafletHandle, 'ums_maplibre_gl_js'], '0.1.4');
+  }
+  private function _shouldConnectMapLibreAssets($fullEngine, $map = [], $forAdminArea = false)
+  {
+    if ($fullEngine != 'leaflet') {
+      return false;
+    }
+    if ($forAdminArea) {
+      return true;
+    }
+    return !empty($map['params']['map_type']) && $this->_isOpenFreeMapType($map['params']['map_type']);
+  }
+  private function _isOpenFreeMapType($mapType)
+  {
+    return is_string($mapType) && strpos($mapType, 'openfreemap:') === 0;
   }
   public function addMapData($params)
   {
@@ -562,7 +585,7 @@ class mapsViewUms extends viewUms
     $fullEngine = $this->_getMapsFullEngine($engine);
     $engine = $this->_getMapsEngine($engine);
 
-    $this->_connectApiAssets($engine, $fullEngine);
+    $this->_connectApiAssets($engine, $fullEngine, $map, $forAdminArea);
     frameUms::_()->addScript('ums_' . $engine . '.core.maps', $this->getModule()->getModPath() . 'js/engines/core.' . $engine . '.js');
     frameUms::_()->addScript('ums_' . $engine . '.core.marker', frameUms::_()->getModule('marker')->getModPath() . 'js/engines/core.' . $engine . '.marker.js');
 
@@ -631,7 +654,7 @@ class mapsViewUms extends viewUms
     }
     // Apply common styles
     if ($leafletEngine == 'leaflet') {
-      $mapLeafletTypes = $this->_getMapLeaFletTypes($fullEngine);
+      $mapLeafletTypes = $this->_getMapLeaFletTypesForSelect($fullEngine);
       $typesForSelect = [];
       foreach ($mapLeafletTypes as $t => $tD) {
         $typesForSelect[$t] = is_array($tD) ? $tD['label'] : $tD;
@@ -648,6 +671,16 @@ class mapsViewUms extends viewUms
       ]);
     }
     return $modes;
+  }
+  private function _getMapLeaFletTypesForSelect($engine)
+  {
+    $types = $this->_getMapLeaFletTypes($engine);
+    foreach ($types as $typeUrl => $typeData) {
+      if (strpos($typeUrl, 'basemaps.cartocdn.com') !== false) {
+        unset($types[$typeUrl]);
+      }
+    }
+    return $types;
   }
   // TODO: Move all those provider map types data detection here
   private function _getMapLeaFletTypes($engine)
@@ -681,6 +714,9 @@ class mapsViewUms extends viewUms
         $osmAttr = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
         $cartoAttr = $osmAttr . ' &copy; <a href="https://carto.com/">CARTO</a>';
         $esriAttr = 'Tiles &copy; Esri';
+        $openFreeMapAttr = '<a href="https://openfreemap.org/">OpenFreeMap</a> | &copy; <a href="https://www.openmaptiles.org/">OpenMapTiles</a> | ' . $osmAttr;
+        $openMapsTopoAttr = '<a href="https://github.com/sletuffe/OpenTopoMap">&copy; OpenTopoMap-R</a> <a href="https://openmaps.fr/donate">Donation</a> ' . $osmAttr;
+        $openMapsHikingAttr = '<a href="https://wiki.openstreetmap.org/wiki/OpenHikingMap">&copy; OpenHikingMap</a> <a href="https://openmaps.fr/donate">Donation</a> ' . $osmAttr;
         $types = [
             'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' => [
                 'label' => __('Default', UMS_LANG_CODE),
@@ -705,6 +741,48 @@ class mapsViewUms extends viewUms
             'https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png' => [
                 'label' => __('OpenRailwayMap', UMS_LANG_CODE),
                 'attr' => 'Map data: ' . $osmAttr . ' | Map style: &copy; <a href="https://www.OpenRailwayMap.org">OpenRailwayMap</a> (CC-BY-SA)',
+            ],
+            'openfreemap:positron' => [
+                'label' => __('OpenFreeMap Positron', UMS_LANG_CODE),
+                'attr' => $openFreeMapAttr,
+                'layer' => 'maplibre',
+                'style' => 'https://tiles.openfreemap.org/styles/positron',
+            ],
+            'openfreemap:bright' => [
+                'label' => __('OpenFreeMap Bright', UMS_LANG_CODE),
+                'attr' => $openFreeMapAttr,
+                'layer' => 'maplibre',
+                'style' => 'https://tiles.openfreemap.org/styles/bright',
+            ],
+            'openfreemap:liberty' => [
+                'label' => __('OpenFreeMap Liberty', UMS_LANG_CODE),
+                'attr' => $openFreeMapAttr,
+                'layer' => 'maplibre',
+                'style' => 'https://tiles.openfreemap.org/styles/liberty',
+            ],
+            'openfreemap:dark' => [
+                'label' => __('OpenFreeMap Dark', UMS_LANG_CODE),
+                'attr' => $openFreeMapAttr,
+                'layer' => 'maplibre',
+                'style' => 'https://tiles.openfreemap.org/styles/dark',
+            ],
+            'openfreemap:fiord' => [
+                'label' => __('OpenFreeMap Fiord', UMS_LANG_CODE),
+                'attr' => $openFreeMapAttr,
+                'layer' => 'maplibre',
+                'style' => 'https://tiles.openfreemap.org/styles/fiord',
+            ],
+            'https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png' => [
+                'label' => __('CyclOSM', UMS_LANG_CODE),
+                'attr' => '&copy; <a href="https://www.cyclosm.org/">CyclOSM</a> | ' . $osmAttr,
+            ],
+            'https://tile.openmaps.fr/opentopomap/{z}/{x}/{y}.png' => [
+                'label' => __('OpenMaps.fr OpenTopoMap-R', UMS_LANG_CODE),
+                'attr' => $openMapsTopoAttr,
+            ],
+            'https://tile.openmaps.fr/openhikingmap/{z}/{x}/{y}.png' => [
+                'label' => __('OpenMaps.fr OpenHikingMap', UMS_LANG_CODE),
+                'attr' => $openMapsHikingAttr,
             ],
             'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png' => [
                 'label' => __('CartoDB Positron', UMS_LANG_CODE),
