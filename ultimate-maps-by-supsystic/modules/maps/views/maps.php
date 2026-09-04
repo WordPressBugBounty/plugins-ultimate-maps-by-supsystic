@@ -243,7 +243,7 @@ class mapsViewUms extends viewUms
       $mapObj['mbs_created'] = 1;
     }
 
-    frameUms::_()->addScript('frontend.maps', $this->getModule()->getModPath() . 'js/frontend.maps.js', ['jquery'], false, true);
+    frameUms::_()->addScript('frontend.maps', $this->getModule()->getModPath() . 'js/frontend.maps.js', ['jquery', 'commonUms', 'coreUms', 'ums.core.maps', 'ums.core.marker'], false, true);
     $this->addMapData(dispatcherUms::applyFilters('mapDataToJs', $mapObj));
 
     $this->assign('markersDisplayType', $mapObj['params']['markers_list_type']);
@@ -252,7 +252,19 @@ class mapsViewUms extends viewUms
     if (!in_array($mapObj['view_id'], $this->_mapStyles)) {
       $res .= $this->addMapStyles($mapObj);
     }
-    return $res . parent::getInlineContent('mapsDrawMap');
+    return $res . parent::getInlineContent('mapsDrawMap') . $this->getInlineMapDataJs($mapObj);
+  }
+
+  private function getInlineMapDataJs($mapObj)
+  {
+    $jsonOptions = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
+    $mapJson = function_exists('wp_json_encode') ? wp_json_encode($mapObj, $jsonOptions) : json_encode($mapObj, $jsonOptions);
+    if (empty($mapJson)) {
+      return '';
+    }
+    return '<script type="text/javascript">(function(){var mapData=' .
+      $mapJson .
+      ';window.umsAllMapsInfo=window.umsAllMapsInfo||[];window.umsAllMapsInfo.push(mapData);if(typeof window.umsWaitForFrontendMaps==="function"){window.umsWaitForFrontendMaps();}else if(typeof window.umsInitPendingMaps==="function"){window.umsInitPendingMaps();}}());</script>';
   }
   public function applyShortcodeHtmlParams($mapObj, $params)
   {

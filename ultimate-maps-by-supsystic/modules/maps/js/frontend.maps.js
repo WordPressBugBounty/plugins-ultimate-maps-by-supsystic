@@ -1,4 +1,5 @@
 var g_umsAllMaps = [];
+var g_umsInitializedMapViews = {};
 function umsGetMembershipGmeViewId(map, oldViewId) {
   var newViewId = oldViewId;
   if (map && map.getParam && map.getParam("membershipEnable") == "1") {
@@ -13,35 +14,68 @@ function umsGetMembershipGmeViewId(map, oldViewId) {
   }
   return newViewId;
 }
-jQuery(document).ready(function () {
-  var mapsInitClb = function () {
-    if (
-      typeof umsAllMapsInfo !== "undefined" &&
-      umsAllMapsInfo &&
-      umsAllMapsInfo.length
-    ) {
-      for (var i = 0; i < umsAllMapsInfo.length; i++) {
-        if (jQuery("#" + umsAllMapsInfo[i].view_html_id).length) {
-          umsInitMapOnPage(umsAllMapsInfo[i]);
-        }
+function umsInitPendingMaps($scope) {
+  if (
+    typeof umsAllMapsInfo === "undefined" ||
+    !umsAllMapsInfo ||
+    !umsAllMapsInfo.length
+  ) {
+    return;
+  }
+
+  for (var i = 0; i < umsAllMapsInfo.length; i++) {
+    var mapData = umsAllMapsInfo[i];
+    if (!mapData || !mapData.view_html_id || g_umsInitializedMapViews[mapData.view_html_id]) {
+      continue;
+    }
+
+    var $map = jQuery("#" + mapData.view_html_id);
+    if ($scope && $scope.length) {
+      var $scopeMap = $scope.find("#" + mapData.view_html_id);
+      if ($scope.is("#" + mapData.view_html_id)) {
+        $scopeMap = $scopeMap.add($scope);
       }
-      jQuery(document).trigger("umsAmiVarInited");
+      if (!$scopeMap.length) {
+        continue;
+      }
+      $map = $scopeMap.first();
     }
-  };
-  var waitForLeaflet = function (attempts) {
-    attempts = attempts || 0;
-    if (attempts > 100) {
-      return;
+
+    if ($map.length) {
+      g_umsInitializedMapViews[mapData.view_html_id] = true;
+      umsInitMapOnPage(mapData);
     }
-    if (typeof L !== "undefined" && typeof L.map === "function") {
-      mapsInitClb();
-    } else {
-      setTimeout(function () {
-        waitForLeaflet(attempts + 1);
-      }, 100);
-    }
-  };
-  waitForLeaflet();
+  }
+  jQuery(document).trigger("umsAmiVarInited");
+}
+function umsWaitForFrontendMaps(attempts, $scope) {
+  attempts = attempts || 0;
+  if (attempts > 100) {
+    return;
+  }
+  if (
+    typeof g_umsMapLoadObserver !== "undefined" &&
+    typeof umsMapLoader !== "undefined"
+  ) {
+    umsInitPendingMaps($scope);
+  } else {
+    setTimeout(function () {
+      umsWaitForFrontendMaps(attempts + 1, $scope);
+    }, 100);
+  }
+}
+jQuery(document).ready(function () {
+  umsWaitForFrontendMaps();
+
+  if (
+    typeof elementorFrontend !== "undefined" &&
+    elementorFrontend.hooks &&
+    typeof elementorFrontend.hooks.addAction === "function"
+  ) {
+    elementorFrontend.hooks.addAction("frontend/element_ready/global", function ($scope) {
+      umsWaitForFrontendMaps(0, $scope);
+    });
+  }
 });
 function umsInitMapOnPage(mapData) {
   g_umsMapLoadObserver.trigger(umsGetMapsEngine(mapData), function () {
@@ -111,8 +145,22 @@ function umsInitMapOnPage(mapData) {
       mapData.heatmap = _umsPrepareHeatmapList(mapData.heatmap);
       newMap.addHeatmap(mapData.heatmap);
     }
+    umsRefreshMapContainer(newMap);
     g_umsAllMaps.push(newMap);
   });
+}
+function umsRefreshMapContainer(map) {
+  setTimeout(function () {
+    if (!map || typeof map.getRawMapInstance !== "function") {
+      return;
+    }
+    var rawMap = map.getRawMapInstance();
+    if (rawMap && typeof rawMap.invalidateSize === "function") {
+      rawMap.invalidateSize(false);
+    } else {
+      jQuery(window).trigger("resize");
+    }
+  }, 100);
 }
 function umsGetMapInfoById(id) {
   if (

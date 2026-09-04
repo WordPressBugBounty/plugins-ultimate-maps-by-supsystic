@@ -12,6 +12,7 @@ class markerModelUms extends modelUms
   public function save($marker = [], &$update = false)
   {
     $id = isset($marker['id']) ? (int) $marker['id'] : 0;
+    $dbResId = 0;
     $marker['title'] = isset($marker['title']) ? trim($marker['title']) : '';
     $marker['coord_x'] = isset($marker['coord_x']) ? (float) $marker['coord_x'] : 0;
     $marker['coord_y'] = isset($marker['coord_y']) ? (float) $marker['coord_y'] : 0;
@@ -75,7 +76,7 @@ class markerModelUms extends modelUms
           'id' => $id,
         ];
         $dbRes = $wpdb->update($tableName, $data_update, $data_where);
-        if ($dbRes) {
+        if ($dbRes !== false) {
           $dbResId = $id;
         }
 
@@ -85,7 +86,7 @@ class markerModelUms extends modelUms
         ];
         $wpdb->delete($tableName, $data_where);
 
-        if (!empty($markerGroupIds)) {
+        if (!empty($markerGroupIds) && is_array($markerGroupIds)) {
           foreach ($markerGroupIds as $markerId) {
             global $wpdb;
             $tableName = $wpdb->prefix . 'ums_marker_groups_relation';
@@ -93,9 +94,6 @@ class markerModelUms extends modelUms
               'marker_id' => $marker['id'],
               'groups_id' => $markerId,
             ]);
-            if ($dbRes) {
-              $dbResId = $wpdb->insert_id;
-            }
           }
         }
         dispatcherUms::doAction('afterMarkerUpdate', $id, $marker);
@@ -138,7 +136,7 @@ class markerModelUms extends modelUms
         }
         dispatcherUms::doAction('afterMarkerInsert', $dbResId, $marker);
       }
-      if ($dbResId) {
+      if (!empty($dbResId)) {
         if (!$update) {
           $id = $dbResId;
         }

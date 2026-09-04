@@ -16,15 +16,8 @@ class maps_widgetViewUms extends viewUms
   {
     frameUms::_()->addStyle('maps_widget', $this->getModule()->getModPath() . 'css/maps_widget.css');
 
-    $maps = frameUms::_()->getModule('maps')->getModel()->getAllMaps();
-    $mapsOpts = [];
-    if (empty($maps)) {
-      $mapsOpts[0] = __('You have no maps', UMS_LANG_CODE);
-    } else {
-      foreach ($maps as $map) {
-        $mapsOpts[$map['id']] = $map['title'];
-      }
-    }
+    $mapsModule = frameUms::_()->getModule('maps');
+    $mapsOpts = $mapsModule ? $mapsModule->getMapsOptionsForSelect() : ['' => __('Select a map', UMS_LANG_CODE)];
     $this->assign('mapsOpts', $mapsOpts);
     $this->displayWidgetForm($data, $widget);
   }

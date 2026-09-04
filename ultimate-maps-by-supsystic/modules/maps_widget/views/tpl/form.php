@@ -47,6 +47,23 @@ if (empty($this->data['img_height'])) {
 </div>
 <div class="umsWidgetRow">
     <div class="umsWidgetRowCell umsFirstCell">
+        <label for="<?php echo esc_attr($this->widget->get_field_id('align')); ?>"><?php esc_html_e('Alignment', UMS_LANG_CODE); ?>:</label>
+    </div>
+    <div class="umsWidgetRowCell umsLastCell">
+        <?php echo htmlUms::selectbox($this->widget->get_field_name('align'), [
+          'attrs' => 'id="' . esc_attr($this->widget->get_field_id('align')) . '"',
+          'value' => isset($this->data['align']) ? esc_attr($this->data['align']) : '',
+          'options' => [
+            '' => esc_html__('Default', UMS_LANG_CODE),
+            'left' => esc_html__('Left', UMS_LANG_CODE),
+            'right' => esc_html__('Right', UMS_LANG_CODE),
+            'none' => esc_html__('None', UMS_LANG_CODE),
+          ],
+        ]); ?>
+    </div>
+</div>
+<div class="umsWidgetRow">
+    <div class="umsWidgetRowCell umsFirstCell">
         <label for="<?php echo esc_attr($this->widget->get_field_id('map_center')); ?>"><?php esc_html_e('Map Center', UMS_LANG_CODE); ?>:</label>
     </div>
     <div class="umsWidgetRowCell umsLastCell">
