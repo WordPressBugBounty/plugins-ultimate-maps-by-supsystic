@@ -2,10 +2,6 @@
 class supsystic_promoUms extends moduleUms
 {
   private $_mainLink = '';
-  private $_specSymbols = [
-    'from' => ['?', '&'],
-    'to' => ['%', '^'],
-  ];
   public function __construct($d)
   {
     parent::__construct($d);
@@ -61,63 +57,6 @@ class supsystic_promoUms extends moduleUms
   public function getOverviewTabContent()
   {
     return $this->getView()->getOverviewTabContent();
-  }
-  // We used such methods - _encodeSlug() and _decodeSlug() - as in slug wp don't understand urlencode() functions
-  private function _encodeSlug($slug)
-  {
-    return str_replace($this->_specSymbols['from'], $this->_specSymbols['to'], $slug);
-  }
-  private function _decodeSlug($slug)
-  {
-    return str_replace($this->_specSymbols['to'], $this->_specSymbols['from'], $slug);
-  }
-  public function decodeSlug($slug)
-  {
-    return $this->_decodeSlug($slug);
-  }
-  public function modifyMainAdminSlug($mainSlug)
-  {
-    $firstTimeLookedToPlugin = !installerUms::isUsed();
-    if ($firstTimeLookedToPlugin) {
-      $mainSlug = $this->_getNewAdminMenuSlug($mainSlug);
-    }
-    return $mainSlug;
-  }
-  private function _getWelcomMessageMenuData($option, $modifySlug = true)
-  {
-    return array_merge($option, [
-      'page_title' => __('Welcome to Supsystic Secure', UMS_LANG_CODE),
-      'menu_slug' => $modifySlug ? $this->_getNewAdminMenuSlug($option['menu_slug']) : $option['menu_slug'],
-      'function' => [$this, 'showWelcomePage'],
-    ]);
-  }
-  public function addWelcomePageToMenus($options)
-  {
-    $firstTimeLookedToPlugin = !installerUms::isUsed();
-    if ($firstTimeLookedToPlugin) {
-      foreach ($options as $i => $opt) {
-        $options[$i] = $this->_getWelcomMessageMenuData($options[$i]);
-      }
-    }
-    return $options;
-  }
-  private function _getNewAdminMenuSlug($menuSlug)
-  {
-    // We can't use "&" symbol in slug - so we used "|" symbol
-    $newSlug = $this->_encodeSlug(str_replace('admin.php?page=', '', $menuSlug));
-    return 'welcome-to-' . frameUms::_()->getModule('adminmenu')->getMainSlug() . '|return=' . $newSlug;
-  }
-  public function addWelcomePageToMainMenu($option)
-  {
-    $firstTimeLookedToPlugin = !installerUms::isUsed();
-    if ($firstTimeLookedToPlugin) {
-      $option = $this->_getWelcomMessageMenuData($option, false);
-    }
-    return $option;
-  }
-  public function showWelcomePage()
-  {
-    $this->getView()->showWelcomePage();
   }
   private function _preparePromoLink($link, $ref = '')
   {

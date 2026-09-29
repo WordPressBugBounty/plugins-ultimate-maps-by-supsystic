@@ -249,13 +249,13 @@ class markerControllerUms extends controllerUms
    */
   public function getNoncedMethods()
   {
-    return ['save', 'removeMarker', 'getMarkerForm', 'getListForTable', 'getMarker', 'removeList', 'getMapMarkers', 'updatePos'];
+    return ['save', 'removeMarker', 'getMarkerForm', 'getListForTable', 'getListForTbl', 'getMarker', 'removeList', 'getMapMarkers', 'updatePos', 'findAddress', 'saveFindAddressStat'];
   }
   public function getPermissions()
   {
     return [
       UMS_USERLEVELS => [
-        UMS_ADMIN => ['save', 'removeMarker', 'getMarkerForm', 'getListForTable', 'getMarker', 'removeList', 'getMapMarkers', 'updatePos'],
+        UMS_ADMIN => ['save', 'removeMarker', 'getMarkerForm', 'getListForTable', 'getListForTbl', 'getMarker', 'removeList', 'getMapMarkers', 'updatePos', 'findAddress', 'saveFindAddressStat'],
       ],
     ];
   }

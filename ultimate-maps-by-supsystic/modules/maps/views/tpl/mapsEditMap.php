@@ -808,7 +808,7 @@
 </table>
 </div>
 <?php if (isset($this->engineFromReq) && !empty($this->engineFromReq)) {
-  echo htmlUms::hidden('map_opts[engine_from_req]', ['value' => $this->engineFromReq]);
+  echo htmlUms::hidden('map_opts[engine_from_req]', ['value' => esc_attr($this->engineFromReq)]);
 } ?>
 <?php echo htmlUms::hidden('mod', ['value' => 'maps']); ?>
 <?php echo htmlUms::hidden('action', ['value' => 'save']); ?>

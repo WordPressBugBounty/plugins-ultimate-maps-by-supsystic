@@ -295,16 +295,6 @@ class installerUms
 
     installerDbUpdaterUms::runUpdate();
   }
-  public static function setUsed()
-  {
-    update_option(UMS_DB_PREF . 'plug_was_used', 1);
-  }
-  public static function isUsed()
-  {
-    // No welcome page for now
-    return true;
-    return (bool) get_option(UMS_DB_PREF . 'plug_was_used');
-  }
   public static function delete()
   {
     global $wpdb;
@@ -327,9 +317,33 @@ class installerUms
     }
   }
   public static function deactivate() {}
+  /**
+   * Older versions did not remove category links together with markers. Drop only links
+   * whose marker is gone: a removed marker never comes back (CSV import always creates
+   * markers with new ids), so this cannot affect live data. Markers/shapes of removed maps
+   * and references to categories are intentionally kept (they may still become valid
+   * after a CSV import).
+   *
+   * @return array Number of removed rows.
+   */
+  public static function cleanupOrphanedData()
+  {
+    global $wpdb;
+    $report = [];
+    if (!dbUms::exist('ums_markers') || !dbUms::exist('ums_marker_groups_relation')) {
+      return $report;
+    }
+    $report['relations_without_marker'] = (int) $wpdb->query("DELETE r FROM {$wpdb->prefix}ums_marker_groups_relation r LEFT JOIN {$wpdb->prefix}ums_markers mk ON mk.id = r.marker_id WHERE mk.id IS NULL");
+    return $report;
+  }
   public static function update()
   {
     global $wpdb;
+    // One-time cleanup, run from an admin page load only (not front-end or AJAX requests).
+    if (is_admin() && !wp_doing_ajax() && !get_option('ums_orphaned_data_cleaned')) {
+      $report = self::cleanupOrphanedData();
+      update_option('ums_orphaned_data_cleaned', ['time' => time(), 'version' => UMS_VERSION_PLUGIN, 'removed' => $report], false);
+    }
     $wpPrefix = $wpdb->prefix; /* add to 0.0.3 Versiom */
     $currentVersion = get_option($wpPrefix . UMS_DB_PREF . 'db_version', 0);
     $installed = (int) get_option($wpPrefix . UMS_DB_PREF . 'db_installed', 0);

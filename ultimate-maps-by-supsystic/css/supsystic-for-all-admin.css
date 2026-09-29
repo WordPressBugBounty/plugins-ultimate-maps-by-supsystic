@@ -1,4 +1,4 @@
-/*remove duplicated WP menu item*/
-#toplevel_page_ultimate-maps-supsystic .wp-submenu.wp-submenu-wrap .wp-first-item {
-  display: none;
+/* Ultimate Maps uses its own in-page navigation. */
+#toplevel_page_ultimate-maps-supsystic .wp-submenu.wp-submenu-wrap {
+  display: none !important;
 }

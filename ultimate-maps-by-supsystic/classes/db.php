@@ -103,8 +103,8 @@ class dbUms
       case 'ums_marker_groups':
         $res = $wpdb->get_var("SHOW TABLES LIKE '{$wpdb->prefix}ums_marker_groups'");
         break;
-      case 'ums_marker_groups':
-        $res = $wpdb->get_var("SHOW TABLES LIKE '{$wpdb->prefix}ums_marker_groups'");
+      case 'ums_marker_groups_relation':
+        $res = $wpdb->get_var("SHOW TABLES LIKE '{$wpdb->prefix}ums_marker_groups_relation'");
         break;
       case 'ums_modules':
         $res = $wpdb->get_var("SHOW TABLES LIKE '{$wpdb->prefix}ums_modules'");

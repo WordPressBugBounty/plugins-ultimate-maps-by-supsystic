@@ -63,6 +63,11 @@ class marker_groupsModelUms extends modelUms
       $data_where = ['parent' => $markerGroupId];
       $wpdb->update($tableName, $data_update, $data_where);
 
+      // Markers keep existing, they just lose this category.
+      if (dbUms::exist('ums_marker_groups_relation')) {
+        $wpdb->delete($wpdb->prefix . 'ums_marker_groups_relation', ['groups_id' => $markerGroupId]);
+      }
+
       if ($deleteMarkerGroup) {
         global $wpdb;
         $tableName = $wpdb->prefix . 'ums_markers';
@@ -140,15 +145,17 @@ class marker_groupsModelUms extends modelUms
     // Remove all empty values
     $ids = array_filter(array_map('intval', $ids));
     if (!empty($ids)) {
-      global $wpdb;
-      $ids = implode(',', $ids);
-      $prepareQuery = $wpdb->prepare("DELETE FROM {$wpdb->prefix}ums_marker_groups WHERE id IN (%1s)", $ids);
-      if ($res = $wpdb->query($prepareQuery)) {
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-        return true;
-      } else {
-        $this->pushError(__('Database error detected', UMS_LANG_CODE));
+      // Same cleanup as a single removal: relations, child categories and markers.
+      $removed = false;
+      foreach ($ids as $id) {
+        if ($this->remove($id) !== false) {
+          $removed = true;
+        }
       }
+      if ($removed) {
+        return true;
+      }
+      $this->pushError(__('Database error detected', UMS_LANG_CODE));
     } else {
       $this->pushError(__('Invalid ID', UMS_LANG_CODE));
     }

@@ -377,13 +377,40 @@ class mapsViewUms extends viewUms
   }
   public function getTabContent()
   {
-    frameUms::_()->getModule('templates')->loadJqGrid();
-    frameUms::_()->addScript('admin.maps.list', $this->getModule()->getModPath() . 'js/admin.maps.list.js');
-    frameUms::_()->addJSVar('admin.maps.list', 'umsTblDataUrl', uriUms::mod('maps', 'getListForTbl', ['reqType' => 'ajax', '_wpnonce' => wp_create_nonce('ums_nonce')]));
-    frameUms::_()->addStyle('admin.maps', $this->getModule()->getModPath() . 'css/admin.maps.css');
+    $list = $this->getModel()->getAdminListPage();
+    frameUms::_()->addScript('admin.maps.list', $this->getModule()->getModPath() . 'js/admin.maps.list.js', ['jquery'], UMS_VERSION_PLUGIN . '-native-list-1');
+    frameUms::_()->addJSVar('admin.maps.list', 'umsMapListConfig', [
+      'listUrl' => uriUms::mod('maps', 'getAdminListPage', ['reqType' => 'ajax']),
+      'removeUrl' => uriUms::mod('maps', 'removeGroup', ['reqType' => 'ajax']),
+      'cloneUrl' => uriUms::mod('maps', 'cloneMapGroup', ['reqType' => 'ajax']),
+      'nonce' => wp_create_nonce('ums_nonce'),
+      'initial' => [
+        'page' => $list['page'],
+        'perPage' => $list['perPage'],
+        'sort' => $list['sort'],
+        'dir' => $list['dir'],
+        'recordsTotal' => $list['recordsTotal'],
+      ],
+      'labels' => [
+        'of' => __('of', UMS_LANG_CODE),
+        'maps' => __('maps', UMS_LANG_CODE),
+        'confirmDelete' => __('Delete selected maps?', UMS_LANG_CODE),
+        'confirmClone' => __('Clone selected maps?', UMS_LANG_CODE),
+        'requestFailed' => __('The request failed. Please try again.', UMS_LANG_CODE),
+        'deleted' => __('Maps deleted.', UMS_LANG_CODE),
+        'cloned' => __('Maps cloned.', UMS_LANG_CODE),
+      ],
+    ]);
+    frameUms::_()->addStyle('admin.maps.list', $this->getModule()->getModPath() . 'css/admin.maps.list.css', [], UMS_VERSION_PLUGIN . '-native-list-1');
 
     $this->assign('addNewLink', frameUms::_()->getModule('options')->getTabUrl('maps_add_new'));
+    $this->assign('list', $list);
     return parent::getContent('mapsAdmin');
+  }
+  public function getAdminListRows($maps)
+  {
+    $this->assign('maps', $maps);
+    return parent::getContent('mapsAdminListRows');
   }
   public function getEditMap($id = 0)
   {
@@ -462,8 +489,9 @@ class mapsViewUms extends viewUms
 
       frameUms::_()->addJSVar('admin.maps.edit', 'umsMainMap', $map);
     } else {
-      $engineFromReq = reqUms::getVar('ums_engine');
-      if (!empty($engineFromReq)) {
+      // Only a known engine key may come from the request (it is reflected into the form).
+      $engineFromReq = (string) reqUms::getVar('ums_engine');
+      if ($engineFromReq !== '' && array_key_exists($engineFromReq, $this->getModule()->getEngines())) {
         $this->assign('engineFromReq', $engineFromReq);
       }
     }

@@ -6,6 +6,21 @@ class mapsControllerUms extends controllerUms
 	   var_dump($maps);
 	   return $maps;
 	}*/
+  public function getAdminListPage()
+  {
+    $list = $this->getModel()->getAdminListPage(
+      reqUms::getVar('search', 'post', ''),
+      reqUms::getVar('page', 'post', 1),
+      reqUms::getVar('perPage', 'post', 20),
+      reqUms::getVar('sort', 'post', 'id'),
+      reqUms::getVar('dir', 'post', 'desc')
+    );
+    $list['html'] = $this->getView()->getAdminListRows($list['rows']);
+    unset($list['rows']);
+    $res = new responseUms();
+    $res->addData($list);
+    return $res->ajaxExec();
+  }
   public function getListForTbl()
   {
     $res = new responseUms();
@@ -297,13 +312,13 @@ class mapsControllerUms extends controllerUms
    */
   public function getNoncedMethods()
   {
-    return ['getListForTbl', 'getAllMaps', 'save', 'clear', 'remove', 'removeGroup', 'cloneMapGroup', 'resortMarkers', 'changeEngine'];
+    return ['getAdminListPage', 'getListForTbl', 'getListForTable', 'getAllMaps', 'getMapById', 'save', 'clear', 'remove', 'removeMap', 'removeGroup', 'cloneMapGroup', 'resortMarkers', 'resortShapes', 'changeEngine'];
   }
   public function getPermissions()
   {
     return [
       UMS_USERLEVELS => [
-        UMS_ADMIN => ['getListForTbl', 'getAllMaps', 'save', 'clear', 'remove', 'removeGroup', 'cloneMapGroup', 'resortMarkers', 'changeEngine'],
+        UMS_ADMIN => ['getAdminListPage', 'getListForTbl', 'getListForTable', 'getAllMaps', 'getMapById', 'save', 'clear', 'remove', 'removeMap', 'removeGroup', 'cloneMapGroup', 'resortMarkers', 'resortShapes', 'changeEngine'],
       ],
     ];
   }

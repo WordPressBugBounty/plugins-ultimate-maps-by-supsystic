@@ -53,11 +53,7 @@ class optionsUms extends moduleUms
   }
   public function getAdminPage()
   {
-    if (installerUms::isUsed()) {
-      return $this->getView()->getAdminPage();
-    } else {
-      return frameUms::_()->getModule('supsystic_promo')->showWelcomePage();
-    }
+    return $this->getView()->getAdminPage();
   }
   public function getTabs()
   {
@@ -97,8 +93,20 @@ class optionsUms extends moduleUms
   }
   public function getActiveTab()
   {
-    $reqTab = reqUms::getVar('tab');
-    return empty($reqTab) ? 'maps' : esc_attr($reqTab);
+    $reqTab = sanitize_key((string) reqUms::getVar('tab'));
+    return empty($reqTab) ? $this->getDefaultTab() : $reqTab;
+  }
+  private function getDefaultTab()
+  {
+    static $defaultTab = null;
+    if ($defaultTab === null) {
+      $defaultTab = 'maps';
+      if (!get_option('ums_default_page_visited')) {
+        update_option('ums_default_page_visited', 1);
+        $defaultTab = 'overview';
+      }
+    }
+    return $defaultTab;
   }
   public function getTabUrl($tab = '')
   {

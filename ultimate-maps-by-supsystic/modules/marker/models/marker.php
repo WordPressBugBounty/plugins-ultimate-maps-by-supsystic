@@ -287,10 +287,23 @@ class markerModelUms extends modelUms
     }
     return $markers;
   }
+  /**
+   * Category links live in a separate table; drop them together with the markers.
+   */
+  private function _removeGroupRelations($markerIds)
+  {
+    $markerIds = array_filter(array_map('intval', (array) $markerIds));
+    if (empty($markerIds) || !dbUms::exist('ums_marker_groups_relation')) {
+      return;
+    }
+    global $wpdb;
+    $wpdb->query("DELETE FROM {$wpdb->prefix}ums_marker_groups_relation WHERE marker_id IN (" . implode(',', $markerIds) . ')');
+  }
   public function removeMarker($markerId)
   {
     dispatcherUms::doAction('beforeMarkerRemove', $markerId);
     global $wpdb;
+    $this->_removeGroupRelations($markerId);
     $tableName = $wpdb->prefix . 'ums_markers';
     $data_where = [
       'id' => $markerId,
@@ -301,6 +314,7 @@ class markerModelUms extends modelUms
   {
     $ids = array_map('intval', $ids);
     global $wpdb;
+    $this->_removeGroupRelations($ids);
     foreach ($ids as $id) {
       $tableName = $wpdb->prefix . 'ums_markers';
       $data_where = [
@@ -338,6 +352,7 @@ class markerModelUms extends modelUms
   public function removeMarkersFromMap($mapId)
   {
     global $wpdb;
+    $this->_removeGroupRelations($wpdb->get_col($wpdb->prepare("SELECT id FROM {$wpdb->prefix}ums_markers WHERE map_id = %d", $mapId)));
     $tableName = $wpdb->prefix . 'ums_markers';
     $data_where = [
       'map_id' => $mapId,

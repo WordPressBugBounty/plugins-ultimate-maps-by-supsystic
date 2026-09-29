@@ -285,13 +285,13 @@ class csvControllerUms extends controllerUms
    */
   public function getNoncedMethods()
   {
-    return ['exportMaps', 'exportMaps', 'import', 'saveCsvOptions'];
+    return ['exportMaps', 'exportMarkers', 'import', 'saveCsvOptions'];
   }
   public function getPermissions()
   {
     return [
       UMS_USERLEVELS => [
-        UMS_ADMIN => ['exportMaps', 'exportMaps', 'import', 'saveCsvOptions'],
+        UMS_ADMIN => ['exportMaps', 'exportMarkers', 'import', 'saveCsvOptions'],
       ],
     ];
   }

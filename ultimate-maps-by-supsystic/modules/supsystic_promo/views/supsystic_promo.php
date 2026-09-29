@@ -1,23 +1,8 @@
 <?php
 class supsystic_promoViewUms extends viewUms
 {
-  public function showWelcomePage()
-  {
-    $this->assign('askOptions', [
-      1 => ['label' => 'Google'],
-      2 => ['label' => 'Worumsess.org'],
-      3 => ['label' => 'Refer a friend'],
-      4 => ['label' => 'Find on the web'],
-      5 => ['label' => 'Other way...'],
-    ]);
-    $this->assign('originalPage', uriUms::getFullUrl());
-    parent::display('welcomePage');
-  }
   public function getOverviewTabContent()
   {
-    frameUms::_()->getModule('templates')->loadJqueryUi();
-
-    frameUms::_()->getModule('templates')->loadSlimscroll();
     frameUms::_()->addScript('admin.overview', $this->getModule()->getModPath() . 'js/admin.overview.js');
     frameUms::_()->addStyle('admin.overview', $this->getModule()->getModPath() . 'css/admin.overview.css');
     $this->assign('mainLink', $this->getModule()->getMainLink());
@@ -27,7 +12,12 @@ class supsystic_promoViewUms extends viewUms
   }
   public function getFaqList()
   {
-    return [];
+    return [
+      __('Do I need a Google Maps API key?', UMS_LANG_CODE) => __('No. OpenStreetMap with Leaflet works without a Google Maps key. Mapbox, Thunderforest and Bing require their own provider keys.', UMS_LANG_CODE),
+      __('How do I add a map to a page?', UMS_LANG_CODE) => __('Create a map, add its markers, then paste its shortcode into a page. A Gutenberg block and Elementor widget are also available.', UMS_LANG_CODE),
+      __('Can I move my maps and markers?', UMS_LANG_CODE) => __('Use the CSV import and export tools to transfer map and marker data.', UMS_LANG_CODE),
+      __('What does PRO add?', UMS_LANG_CODE) => __('PRO adds KML layers, shapes, heatmaps, marker lists and sliders, plus frontend marker submissions with access and usage controls.', UMS_LANG_CODE),
+    ];
   }
   public function getServerSettings()
   {

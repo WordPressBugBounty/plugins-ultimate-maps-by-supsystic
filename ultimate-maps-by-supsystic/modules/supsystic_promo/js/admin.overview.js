@@ -1,17 +1,24 @@
-jQuery(document).ready(function () {
-  jQuery('.supsystic-overview-news-content').slimScroll({
-    height: '500px',
-    railVisible: true,
-    alwaysVisible: true,
-    allowPageScroll: true,
+(function ($) {
+  'use strict';
+
+  $(function () {
+    $('.ums-overview a[href^="#"]').on('click', function (event) {
+      var target = document.querySelector(this.getAttribute('href'));
+      if (!target) {
+        return;
+      }
+
+      event.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    $('.ums-overview-faq-question').on('click', function () {
+      var $item = $(this).closest('.ums-overview-faq-item');
+      var willOpen = !$item.hasClass('is-open');
+
+      $item.siblings('.is-open').removeClass('is-open').find('.ums-overview-faq-question').attr('aria-expanded', 'false');
+      $item.toggleClass('is-open', willOpen);
+      $(this).attr('aria-expanded', willOpen ? 'true' : 'false');
+    });
   });
-  jQuery('.faq-title').click(function () {
-    var descBlock = jQuery(this).find('.description:first');
-    if (descBlock.is(':visible')) {
-      descBlock.slideUp(g_umsAnimationSpeed);
-    } else {
-      jQuery('.faq-title .description').slideUp(g_umsAnimationSpeed);
-      descBlock.slideDown(g_umsAnimationSpeed);
-    }
-  });
-});
+})(jQuery);

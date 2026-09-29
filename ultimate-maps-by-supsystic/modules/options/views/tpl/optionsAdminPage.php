@@ -1,5 +1,10 @@
 <div class="wrap">
     <div class="supsystic-plugin">
+        <nav class="supsystic-breadcrumbs" aria-label="<?php echo esc_attr__('Breadcrumb', UMS_LANG_CODE); ?>">
+            <a href="<?php echo esc_url($this->tabs['maps']['url'] ?? $this->mainUrl); ?>"><?php echo esc_html__('Maps', UMS_LANG_CODE); ?></a>
+            <i class="fa fa-angle-right" aria-hidden="true"></i>
+            <span aria-current="page"><?php echo esc_html($this->tabs[$this->activeTab]['label'] ?? $this->activeTab); ?></span>
+        </nav>
         <section class="supsystic-content">
             <nav class="supsystic-navigation supsystic-sticky <?php dispatcherUms::doAction('adminMainNavClassAdd'); ?>">
                 <ul class="supsystic-main-navigation-list">
@@ -7,22 +12,22 @@
                         <?php if (isset($tab['hidden']) && $tab['hidden']) {
                           continue;
                         } ?>
-                        <li class="<?php echo $this->activeTab == $tabKey || in_array($tabKey, $this->activeParentTabs) ? 'active' : ''; ?>" data-tab-key="<?php echo $tabKey; ?>">
-                            <a href="<?php echo $tab['url']; ?>">
+                        <li class="<?php echo $this->activeTab == $tabKey || in_array($tabKey, $this->activeParentTabs) ? 'active' : ''; ?>" data-tab-key="<?php echo esc_attr($tabKey); ?>">
+                            <a href="<?php echo esc_url($tab['url']); ?>">
                                 <?php if (isset($tab['fa_icon'])) { ?>
-                                    <i class="fa <?php echo $tab['fa_icon']; ?>"></i>
+                                    <i class="fa <?php echo esc_attr($tab['fa_icon']); ?>"></i>
                                 <?php } elseif (isset($tab['wp_icon'])) { ?>
-                                    <i class="dashicons-before <?php echo $tab['wp_icon']; ?>"></i>
+                                    <i class="dashicons-before <?php echo esc_attr($tab['wp_icon']); ?>"></i>
                                 <?php } elseif (isset($tab['icon'])) { ?>
-                                    <i class="<?php echo $tab['icon']; ?>"></i>
+                                    <i class="<?php echo esc_attr($tab['icon']); ?>"></i>
                                 <?php } ?>
-                                <?php echo $tab['label']; ?>
+                                <?php echo esc_html($tab['label']); ?>
                             </a>
                         </li>
                     <?php } ?>
                 </ul>
             </nav>
-            <div class="supsystic-container supsystic-<?php echo $this->activeTab; ?>">
+            <div class="supsystic-container supsystic-<?php echo esc_attr($this->activeTab); ?>">
                 <?php
 //dispatcherUms::doAction('discountMsg');
 ?>
@@ -41,7 +46,7 @@
 <div id="umsOptInProWnd" style="display: none;" title="<?php _e('Improve Free version', UMS_LANG_CODE); ?>">
     <p>
         <?php printf(
-          __("Please be advised that this option is available only in <a target='_blank' href='%s'>PRO version</a>. You can <a target='_blank' href='%s' class='button'>Get PRO</a> today and get this and other PRO option for your PopUps!", UMS_LANG_CODE),
+          __("Please be advised that this option is available only in <a target='_blank' href='%s'>PRO version</a>. You can <a target='_blank' href='%s' class='button'>Get PRO</a> today and get this and other PRO options for your Maps!", UMS_LANG_CODE),
           $this->mainLink,
           $this->mainLink,
         ); ?>

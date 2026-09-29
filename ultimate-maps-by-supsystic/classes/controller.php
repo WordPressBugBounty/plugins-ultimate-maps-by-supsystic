@@ -76,6 +76,14 @@ abstract class controllerUms
   {
     return [];
   }
+  /**
+   * Actions that visitors without admin rights may call. Everything else is
+   * admin-only unless listed in getPermissions() (see frameUms::havePermissions()).
+   */
+  public function getPublicMethods()
+  {
+    return [];
+  }
   protected function _createView($name = '')
   {
     if (empty($name)) {

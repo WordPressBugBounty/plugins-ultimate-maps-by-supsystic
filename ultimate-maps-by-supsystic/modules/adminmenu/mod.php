@@ -22,32 +22,7 @@ class adminmenuUms extends moduleUms
     ];
     $mainMenuPageOptions = dispatcherUms::applyFilters('adminMenuMainOption', $mainMenuPageOptions);
     add_menu_page($mainMenuPageOptions['page_title'], $mainMenuPageOptions['menu_title'], $mainMenuPageOptions['capability'], $mainMenuPageOptions['menu_slug'], $mainMenuPageOptions['function'], UMS_ADMIN_MENU_ICON);
-    //remove duplicated WP menu item
-    //add_submenu_page($mainMenuPageOptions['menu_slug'], '', '', $mainMenuPageOptions['capability'], $mainMenuPageOptions['menu_slug'], $mainMenuPageOptions['function']);
-    $tabs = frameUms::_()->getModule('options')->getTabs();
-    $subMenus = [];
-    foreach ($tabs as $tKey => $tab) {
-      if ($tKey == 'main_page') {
-        continue;
-      } // Top level menu item - is main page, avoid place it 2 times
-      if (
-        (isset($tab['hidden']) && $tab['hidden']) ||
-        (isset($tab['hidden_for_main']) && $tab['hidden_for_main']) || // Hidden for WP main
-        (isset($tab['is_main']) && $tab['is_main'])
-      ) {
-        continue;
-      }
-      $subMenus[] = [
-        'title' => $tab['label'],
-        'capability' => $mainCap,
-        'menu_slug' => 'admin.php?page=' . $mainSlug . '&tab=' . $tKey,
-        'function' => '',
-      ];
-    }
-    $subMenus = dispatcherUms::applyFilters('adminMenuOptions', $subMenus);
-    foreach ($subMenus as $opt) {
-      add_submenu_page($mainSlug, $opt['title'], $opt['title'], $opt['capability'], $opt['menu_slug'], $opt['function']);
-    }
+    // Internal tabs live in the plugin navigation; WordPress needs only the top-level entry.
   }
   public function getMainLink()
   {

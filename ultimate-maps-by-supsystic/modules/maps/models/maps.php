@@ -148,7 +148,7 @@ class mapsModelUms extends modelUms
       'params' => utilsUms::serialize($mapOpts),
       'create_date' => date('Y-m-d H:i:s'),
     ];
-    if (isset($params['engine_from_req'])) {
+    if (isset($params['engine_from_req']) && array_key_exists($params['engine_from_req'], $this->getModule()->getEngines())) {
       $insert['engine'] = $params['engine_from_req'];
     }
     return $insert;
@@ -208,15 +208,24 @@ class mapsModelUms extends modelUms
     }
     return false;
   }
+  /**
+   * Everything stored per map. Shapes belong to a PRO feature but may hold rows even
+   * while PRO is inactive, so the table is cleaned directly.
+   */
+  private function _removeMapData($mapId)
+  {
+    global $wpdb;
+    frameUms::_()->getModule('marker')->getModel()->removeMarkersFromMap($mapId);
+    if (dbUms::exist('ums_shapes')) {
+      $wpdb->delete($wpdb->prefix . 'ums_shapes', ['map_id' => $mapId]);
+    }
+  }
   public function remove($mapId)
   {
     $mapId = (int) $mapId;
     if (!empty($mapId)) {
       global $wpdb;
-      frameUms::_()->getModule('marker')->getModel()->removeMarkersFromMap($mapId);
-      if (frameUms::_()->getModule('shape')) {
-        frameUms::_()->getModule('shape')->getModel()->removeShapesFromMap($mapId);
-      }
+      $this->_removeMapData($mapId);
       $tableName = $wpdb->prefix . 'ums_maps';
       $data_where = ['id' => $mapId];
       return $res = $wpdb->delete($tableName, $data_where);
@@ -230,10 +239,7 @@ class mapsModelUms extends modelUms
     $ids = array_map('intval', $ids);
     global $wpdb;
     foreach ($ids as $id) {
-      frameUms::_()->getModule('marker')->getModel()->removeMarkersFromMap($id);
-      if (frameUms::_()->getModule('shape')) {
-        frameUms::_()->getModule('shape')->getModel()->removeShapesFromMap($id);
-      }
+      $this->_removeMapData($id);
       $tableName = $wpdb->prefix . 'ums_maps';
       $data_where = [
         'id' => $id,
@@ -519,7 +525,7 @@ class mapsModelUms extends modelUms
   public function changeEngine($d)
   {
     $id = isset($d['id']) ? (int) $d['id'] : false;
-    $d['engine'] = isset($d['engine']) ? $d['engine'] : false;
+    $d['engine'] = isset($d['engine']) && array_key_exists($d['engine'], $this->getModule()->getEngines()) ? $d['engine'] : false;
     if ($id) {
       if ($d['engine']) {
         global $wpdb;
@@ -539,6 +545,70 @@ class mapsModelUms extends modelUms
   {
     global $wpdb;
     return $wpdb->get_var("SELECT `engine`, COUNT(*) AS `total` FROM {$wpdb->prefix}ums_maps GROUP BY `engine`");
+  }
+  /**
+   * Return a bounded page for the native admin maps list.
+   */
+  public function getAdminListPage($search = '', $page = 1, $perPage = 20, $sort = 'id', $direction = 'desc')
+  {
+    global $wpdb;
+
+    $search = trim((string) $search);
+    $page = max(1, (int) $page);
+    $perPage = in_array((int) $perPage, [10, 20, 50, 100], true) ? (int) $perPage : 20;
+    $sortColumns = [
+      'id' => 'm.id',
+      'title' => 'm.title',
+      'create_date' => 'm.create_date',
+      'markers' => 'COALESCE(mc.marker_count, 0)',
+    ];
+    $sort = isset($sortColumns[$sort]) ? $sort : 'id';
+    $direction = strtolower($direction) === 'asc' ? 'asc' : 'desc';
+    $where = '';
+    $params = [];
+
+    if ($search !== '') {
+      $like = '%' . $wpdb->esc_like($search) . '%';
+      $where = ' WHERE (m.title LIKE %s OR CAST(m.id AS CHAR) LIKE %s)';
+      $params = [$like, $like];
+    }
+
+    $mapsTable = $wpdb->prefix . 'ums_maps';
+    $markersTable = $wpdb->prefix . 'ums_markers';
+    $countSql = "SELECT COUNT(*) FROM {$mapsTable} m{$where}";
+    $total = (int) $wpdb->get_var($params ? $wpdb->prepare($countSql, $params) : $countSql);
+    $page = min($page, max(1, (int) ceil($total / $perPage)));
+    $offset = ($page - 1) * $perPage;
+    $order = $sortColumns[$sort] . ' ' . strtoupper($direction);
+    $sql = "SELECT m.id, m.title, m.create_date, COALESCE(mc.marker_count, 0) AS marker_count
+      FROM {$mapsTable} m
+      LEFT JOIN (SELECT map_id, COUNT(*) AS marker_count FROM {$markersTable} GROUP BY map_id) mc ON mc.map_id = m.id
+      {$where}
+      ORDER BY {$order}, m.id DESC
+      LIMIT %d OFFSET %d";
+    $rows = $wpdb->get_results($wpdb->prepare($sql, array_merge($params, [$perPage, $offset])), ARRAY_A);
+
+    foreach ($rows as &$row) {
+      $row['id'] = (int) $row['id'];
+      $row['marker_count'] = (int) $row['marker_count'];
+      $row['marker_preview'] = $wpdb->get_col($wpdb->prepare(
+        "SELECT title FROM {$markersTable} WHERE map_id = %d ORDER BY sort_order ASC, id ASC LIMIT 2",
+        $row['id']
+      ));
+      $row['created_label'] = !empty($row['create_date'])
+        ? date_i18n(get_option('date_format'), strtotime($row['create_date']))
+        : '';
+    }
+    unset($row);
+
+    return [
+      'rows' => $rows,
+      'page' => $page,
+      'perPage' => $perPage,
+      'sort' => $sort,
+      'dir' => $direction,
+      'recordsTotal' => $total,
+    ];
   }
   public function getTotalCountBySearch($search)
   {
