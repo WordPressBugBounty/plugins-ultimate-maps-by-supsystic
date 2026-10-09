@@ -6,7 +6,7 @@ Donate link: https://supsystic.com/plugins/plugins/ultimate-maps
 Tags: Wordpress map, OpenStreetMap, leaflet, map plugin, bing map
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.1
+Stable tag: 1.6.2
 License: GNU General Public License v2.0 or later
 
 Ultimate Maps by Supsystic is the best Google Maps alternative. It includes OpenStreetMap (OSM), Bing Maps, MapBox and Thunderforest maps services
@@ -205,6 +205,10 @@ Please report security bugs found in the source code of the Ultimate Maps by Sup
 == Changelog ==
 
 = 2026 =
+
+= 1.6.2 — October 9, 2026 =
+
+* Maintenance release with minor stability improvements.
 
 = 1.6.1 — September 29, 2026 =
 
