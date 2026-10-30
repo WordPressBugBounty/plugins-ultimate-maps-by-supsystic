@@ -3,7 +3,7 @@ Contributors: supsysticcom
 Tags: map, openstreetmap, leaflet, osm, map markers
 Tested up to: 7.1
 Requires PHP: 7.3
-Stable tag: 1.6.4
+Stable tag: 1.6.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -170,6 +170,10 @@ Please report security issues through the [Patchstack Vulnerability Disclosure P
 == Changelog ==
 
 = 2026 =
+
+= 1.6.5 — October 30, 2026 =
+
+* Tested up to 7.1.4 - General code improvements.
 
 = 1.6.4 — October 16, 2026 =
 
