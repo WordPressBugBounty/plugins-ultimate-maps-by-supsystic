@@ -1,9 +1,10 @@
 === Ultimate Maps by Supsystic – OpenStreetMap, Leaflet & Mapbox, No API Key ===
 Contributors: supsysticcom
 Tags: map, openstreetmap, leaflet, osm, map markers
+Requires at least: 5.9
 Tested up to: 7.1
 Requires PHP: 7.3
-Stable tag: 1.6.5
+Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -158,18 +159,29 @@ Please report security issues through the [Patchstack Vulnerability Disclosure P
 
 == Screenshots ==
 
-1. Interactive map with custom markers and marker descriptions.
-2. Switch the map provider in one click: OpenStreetMap, Mapbox, Bing Maps or Thunderforest.
-3. Map with a list of all markers displayed below it (Pro).
-4. Marker clustering on a map with many locations.
-5. Map styles and themes.
-6. Map settings in the admin area.
-7. Marker settings: address, icon, description and category.
-8. Shape settings for polygons, lines and circles (Pro).
+1. Interactive OpenStreetMap maps without a Google key: markers with photos in their popups, on desktop and phone.
+2. The map editor: settings in groups, a search for any option, switches and a live preview of the map.
+3. Markers with photos, video and links in the popup, 50+ icons or your own, and categories in their own colors.
+4. Dozens of map styles: OpenStreetMap, OpenFreeMap vector styles, satellite, topo and cycling maps.
+5. Shapes on the map: delivery zones, districts and circles, each with its own popup text.
+6. A slider of your places under the map, with a photo card for every marker.
+7. Clusters keep hundreds of markers readable as visitors zoom out.
+8. Maps, zones and sliders that fit phones.
+9. Settings and Import / Export: the map engine, provider keys, access and CSV files.
+10. All your maps at a glance, with the shortcode, the PHP code, a Gutenberg block and an Elementor widget.
 
 == Changelog ==
 
 = 2026 =
+
+= 1.7.0 — November 15, 2026 =
+
+* A completely new look: every page, setting and dialog of the plugin is cleaner and easier to use.
+* The map editor now groups its settings into tabs and cards, with a search that finds any setting in a second and switches instead of checkboxes; markers and shapes get cards too.
+* Settings, Marker Categories and Import / Export are clear cards with one Save button.
+* See what each PRO feature does before you upgrade: every PRO option opens a short window with a picture of it.
+* The Overview page compares Free and PRO line by line and shows the license options.
+* Your existing maps, markers and settings stay exactly as they were, so updating is safe.
 
 = 1.6.5 — October 30, 2026 =
 

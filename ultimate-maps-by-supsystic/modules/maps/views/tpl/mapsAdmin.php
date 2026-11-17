@@ -39,8 +39,7 @@ $list = $this->list;
           <th scope="col" class="ums-col-title ums-sortable" id="ums-sort-title" tabindex="0"><?php esc_html_e('Title', UMS_LANG_CODE); ?><i class="fa fa-sort ums-sort-icon" aria-hidden="true"></i></th>
           <th scope="col" class="ums-col-markers ums-sortable" id="ums-sort-markers" tabindex="0"><?php esc_html_e('Markers', UMS_LANG_CODE); ?><i class="fa fa-sort ums-sort-icon" aria-hidden="true"></i></th>
           <th scope="col" class="ums-col-created ums-sortable" id="ums-sort-create_date" tabindex="0"><?php esc_html_e('Created', UMS_LANG_CODE); ?><i class="fa fa-sort ums-sort-icon" aria-hidden="true"></i></th>
-          <th scope="col" class="ums-col-code"><?php esc_html_e('Shortcode', UMS_LANG_CODE); ?></th>
-          <th scope="col" class="ums-col-code"><?php esc_html_e('PHP code', UMS_LANG_CODE); ?></th>
+          <th scope="col" class="ums-col-code"><?php esc_html_e('Shortcode', UMS_LANG_CODE); ?> / PHP</th>
           <th scope="col" class="ums-col-actions"><?php esc_html_e('Actions', UMS_LANG_CODE); ?></th>
         </tr></thead>
         <tbody id="ums-maps-tbody"><?php echo $this->getAdminListRows($list['rows']); ?></tbody>

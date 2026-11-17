@@ -47,6 +47,8 @@ class optionsViewUms extends viewUms
     $this->assign('mainUrl', $this->getModule()->getTabUrl());
     $this->assign('activeParentTabs', $activeParentTabs);
     $this->assign('mainLink', frameUms::_()->getModule('supsystic_promo')->getMainLink());
+    $promo = frameUms::_()->getModule('supsystic_promo');
+    $this->assign('reviewCard', $promo && method_exists($promo, 'getReviewCardHtml') ? $promo->getReviewCardHtml() : '');
 
     parent::display('optionsAdminPage');
   }

@@ -20,7 +20,7 @@ class templatesUms extends moduleUms
         // acPromoStyle.css also carries shared admin layout rules, not just promo styling - keep the style enqueue
         frameUms::_()->addStyle('umsAcPromoStyle', UMS_CSS_PATH . 'acPromoStyle.css');
 
-        frameUms::_()->addScript('adminOptionsUms', UMS_JS_PATH . 'admin.options.js', [], false, true);
+        frameUms::_()->addScript('adminOptionsUms', UMS_JS_PATH . 'admin.options.js', [], filemtime(UMS_JS_DIR . 'admin.options.js'), true);
         add_action('admin_enqueue_scripts', [$this, 'loadMediaScripts']);
       }
       // Some common styles - that need to be on all admin pages - be careful with them

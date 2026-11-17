@@ -67,7 +67,8 @@
 				</div>
 				<div class="supsistic-half-side-box" style="position: relative;">
 				<div id="umsMapRightStickyBar" class="supsystic-sticky">
-					<div id="umsMapPreview" style="width: 100%; height: 350px;"></div>
+					<?php // 440px, as in Easy Google Maps: a popup with a photo fits the preview whole ?>
+					<div id="umsMapPreview" style="width: 100%; height: 440px;"></div>
 					<div class="umsMapProControlsCon" id="umsMapProControlsCon_<?php echo esc_attr($this->viewId); ?>">
 						<?php dispatcherUms::doAction('addAdminMapBottomControls', $this->editMap ? $this->map : []); ?>
 					</div>

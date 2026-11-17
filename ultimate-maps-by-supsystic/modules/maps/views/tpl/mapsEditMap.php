@@ -816,6 +816,9 @@
 <?php echo htmlUms::hidden('map_opts[id]', ['value' => $this->editMap ? esc_attr($this->map['id']) : '']); ?>
 <?php echo htmlUms::hidden('map_opts[membershipEnable]', ['value' => isset($this->map['params']['membershipEnable']) ? esc_attr($this->map['params']['membershipEnable']) : 0, 'attrs' => 'id="membershipHiddenEnable"']); ?>
 </form>
+<?php if (!$this->isPro && method_exists(frameUms::_()->getModule('supsystic_promo')->getView(), 'getEditorProCard')) {
+  echo frameUms::_()->getModule('supsystic_promo')->getView()->getEditorProCard();
+} ?>
 <!--Map Markers List Wnd-->
 <div id="umsMarkersListWnd" style="display: none;" title="<?php esc_attr_e('Show markers list with your map on frontend', UMS_LANG_CODE); ?>">
 <!--Mml == Map Markers List-->
@@ -837,7 +840,7 @@
 </ul>
 </div>
 <!--Icons Wnd-->
-<div id="umsIconsWnd" style="display: none;">
+<div id="umsIconsWnd" style="display: none;" title="<?php echo esc_attr__('Choose Icon', UMS_LANG_CODE); ?>">
 <ul class="iconsList">
     <?php foreach ($this->icons as $icon) { ?>
         <li class="previewIcon"

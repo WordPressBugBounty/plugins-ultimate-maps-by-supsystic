@@ -10,6 +10,23 @@ class optionsUms extends moduleUms
     dispatcherUms::addAction('afterModulesInit', [$this, 'initAllOptValues']);
     dispatcherUms::addFilter('mainAdminTabs', [$this, 'addAdminTab']);
     dispatcherUms::addAction('adminMenuAccessCap', [$this, 'adminMenuAccessRoles'], 10, 1);
+    if (is_admin()) {
+      // Late, so the one look of the plugin pages is printed after the old plugin-wide stylesheets
+      add_action('admin_enqueue_scripts', [$this, 'enqueueDesign'], 100);
+    }
+  }
+  /**
+   * One look for every admin page of the plugin (buttons, fields, toolbars, dialogs, cards), as in Photo Gallery and
+   * Data Tables. Only the look changes; the markup of the pages stays as it was.
+   */
+  public function enqueueDesign()
+  {
+    if (!frameUms::_()->isAdminPlugOptsPage()) {
+      return;
+    }
+    $ver = UMS_VERSION_PLUGIN . '-ds-3';
+    wp_enqueue_style('ums-admin-design', $this->getModPath() . 'css/admin.design.css', [], $ver);
+    wp_enqueue_script('ums-admin-design', $this->getModPath() . 'js/admin.design.js', ['jquery'], $ver, true);
   }
   public function addAdminTab($tabs)
   {

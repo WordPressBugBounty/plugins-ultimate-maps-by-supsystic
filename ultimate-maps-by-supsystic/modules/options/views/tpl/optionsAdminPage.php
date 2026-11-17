@@ -31,6 +31,7 @@
                 <?php
 //dispatcherUms::doAction('discountMsg');
 ?>
+                <?php echo $this->reviewCard; ?>
                 <?php echo $this->content; ?>
                 <div class="clear"></div>
             </div>

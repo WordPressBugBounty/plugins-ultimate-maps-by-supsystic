@@ -723,6 +723,14 @@ function _umsResizeRightSidebar(container) {
 
     self.jqGrid('setGridWidth', rightBarWd);
     self.jqGrid('setGridHeight', newHeight);
+    // The sum above misses margins and the pager: the whole column must fit the screen under the admin bar, or it
+    // runs below the screen while it sticks
+    if (wndWd > 991 && self.is(':visible')) {
+      var over = rightBar.outerHeight() - (wndHt - jQuery('#wpadminbar').outerHeight() - 16);
+      if (over > 0) {
+        self.jqGrid('setGridHeight', Math.max(150, newHeight - over));
+      }
+    }
   });
 }
 function umsAddCustomControlsOptions() {

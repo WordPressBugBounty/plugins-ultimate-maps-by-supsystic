@@ -4,7 +4,7 @@
  * Plugin Name: Ultimate Maps by Supsystic
  * Plugin URI: https://supsystic.com/plugins/ultimate-maps/
  * Description: Interactive OpenStreetMap and Leaflet maps with unlimited markers, categories and clustering. No Google API key and no requests to Google.
- * Version: 1.6.5
+ * Version: 1.7.0
  * Author: supsystic.com
  * Author URI: http://supsystic.com
  * Text Domain: ultimate-maps-by-supsystic

@@ -58,8 +58,9 @@ jQuery(window).on('load', function () {
           if (res.rows.length) {
             //g_umsMap.applyZoomTypeAdmin();	// Apply zoom type fit_bounds after all markers load in admin area
           }
-          _umsResizeRightSidebar(jQuery('#umsMarkersListGrid'));
+          // The search shows first: sized before it, the column got taller than the screen
           jQuery('#umsMarkersSearchInput').show();
+          _umsResizeRightSidebar(jQuery('#umsMarkersListGrid'));
         },
       })
       .jqGrid('sortableRows', {
@@ -604,6 +605,9 @@ function umsInitIconsWnd() {
     dialodClasses = umsGetDialogClasses();
 
   jQuery('#umsMarkerIconBtn').click(function () {
+    // The icon of the marker is marked in the window
+    var curIconId = jQuery('#umsMarkerForm input[name="marker_opts[icon]"]').val();
+    $container.find('.previewIcon').removeClass('is-current').filter('[data-id="' + curIconId + '"]').addClass('is-current');
     $container.addClass(dialodClasses.markerIcon);
     $container.dialog('open');
     return false;

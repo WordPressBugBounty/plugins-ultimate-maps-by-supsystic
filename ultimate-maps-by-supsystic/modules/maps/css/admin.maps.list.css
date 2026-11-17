@@ -1,27 +1,22 @@
-/* The Maps container adds its own surface around the native list. */
-.supsystic-container.supsystic-maps {
-  padding: 0;
-  background: transparent;
-}
+/* The frame of the plugin pages gives the light surface and the space around the list */
 
 #ums-maps-list {
   --ums-navy: #223146;
   --ums-navy-deep: #182536;
-  --ums-cyan: #36d6da;
+  --ums-cyan: #0e8a93;
   --ums-border: #dce3ea;
   --ums-muted: #6e7d8d;
   --ums-surface: #fff;
-  margin-top: 10px;
+  margin: 0;
   max-width: 100%;
 }
 
 #ums-maps-list .ums-list-panel {
   box-sizing: border-box;
+  min-height: 0;
   margin: 0;
-  padding: 16px 18px 18px !important;
-  border-radius: 10px;
-  background: #f7f9fb;
-  box-shadow: 0 8px 24px rgba(30, 49, 70, 0.07);
+  padding: 0 !important;
+  background: transparent;
 }
 
 #ums-maps-list .ums-table-toolbar {
@@ -78,7 +73,7 @@
 
 #ums-maps-list .ums-tables-search input:focus {
   border-color: var(--ums-cyan);
-  box-shadow: 0 0 0 2px rgba(54, 214, 218, 0.18);
+  box-shadow: 0 0 0 2px rgba(14, 138, 147, 0.15);
   outline: none;
 }
 
@@ -124,7 +119,7 @@
 #ums-maps-list .ums-page-btn:focus-visible,
 #ums-maps-list .ums-page-number:focus-visible {
   border-color: var(--ums-cyan);
-  color: #148e92;
+  color: #0e8a93;
   outline: none;
 }
 
@@ -187,7 +182,7 @@
 
 #ums-maps-list .ums-maps-table {
   width: 100%;
-  min-width: 1100px;
+  min-width: 900px;
   border: 0;
   border-collapse: separate;
   border-spacing: 0;
@@ -259,60 +254,70 @@
   background: #f4fbfb;
 }
 
-#ums-maps-list .ums-col-check,
-#ums-maps-list .ums-col-id {
+/* The header cells are left aligned: the check and ID columns stay centered in the header too */
+#ums-maps-list .ums-maps-table .ums-col-check,
+#ums-maps-list .ums-maps-table .ums-col-id {
   width: 48px;
   text-align: center;
 }
 
+/* The header cells have a 1px divider on the right: 1px less padding keeps the header and row centers on one line */
+#ums-maps-list .ums-maps-table thead .ums-col-check,
+#ums-maps-list .ums-maps-table thead .ums-col-id {
+  padding-right: 11px;
+}
+
+/* An 18 x 18 square as in Photo Gallery and Data Tables, the same in the header and the rows */
 #ums-maps-list .ums-native-check {
+  position: relative;
   display: inline-block !important;
+  box-sizing: border-box;
   width: 18px !important;
   min-width: 18px;
   height: 18px !important;
   margin: 0 !important;
-  border: 2px solid #9aabba;
-  border-radius: 4px;
+  padding: 0;
+  border: 1.5px solid #94a3b8;
+  border-radius: 5px;
   background: #fff;
   box-shadow: none;
   vertical-align: middle;
   appearance: none;
   -webkit-appearance: none;
   cursor: pointer;
+  transition: border-color .15s ease, background-color .15s ease;
 }
 
 #ums-maps-list .ums-maps-table thead .ums-native-check {
   border-color: #fff;
 }
 
-#ums-maps-list .ums-native-check:checked {
+#ums-maps-list .ums-native-check:hover {
   border-color: var(--ums-cyan);
-  background: var(--ums-cyan);
 }
 
-#ums-maps-list .ums-native-check:checked::before {
-  content: '';
-  display: block;
-  width: 5px;
-  height: 9px;
-  margin: 1px 0 0 4px;
-  border: solid var(--ums-navy);
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
-}
-
+#ums-maps-list .ums-native-check:checked,
 #ums-maps-list .ums-native-check:indeterminate {
   border-color: var(--ums-cyan);
   background: var(--ums-cyan);
 }
 
+#ums-maps-list .ums-native-check:checked::before,
 #ums-maps-list .ums-native-check:indeterminate::before {
   content: '';
+  position: absolute;
+  inset: 0;
   display: block;
-  width: 8px;
-  height: 2px;
-  margin: 6px 0 0 3px;
-  background: var(--ums-navy);
+  width: auto;
+  height: auto;
+  margin: 0;
+  border: 0;
+  transform: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 12px no-repeat;
+}
+
+#ums-maps-list .ums-native-check:indeterminate::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8h8' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
 #ums-maps-list .ums-native-check:focus-visible {
@@ -373,7 +378,13 @@
 }
 
 #ums-maps-list .ums-col-code {
-  min-width: 205px;
+  width: 25%;
+  min-width: 200px;
+}
+
+/* Shortcode and PHP code in one column, one above the other (as in the Photo Gallery list) */
+#ums-maps-list .ums-col-code .ums-copy-code + .ums-copy-code {
+  margin-top: 6px;
 }
 
 #ums-maps-list .ums-copy-code {
@@ -394,22 +405,37 @@
 
 #ums-maps-list .ums-copy-code:focus {
   border-color: var(--ums-cyan);
-  box-shadow: 0 0 0 2px rgba(54, 214, 218, 0.16);
+  box-shadow: 0 0 0 2px rgba(14, 138, 147, 0.15);
   outline: none;
 }
 
 #ums-maps-list .ums-col-actions {
-  min-width: 145px;
+  min-width: 158px;
   white-space: nowrap;
 }
 
+/* Row actions: compact outline buttons with grey icons, as in the other Supsystic lists; delete turns red on hover */
 #ums-maps-list .ums-row-action {
+  height: 32px;
+  min-height: 32px;
   margin-right: 4px;
+  padding: 0 11px;
 }
 
-#ums-maps-list .ums-delete-map:hover {
-  border-color: #d64e5a;
-  color: #b52d39;
+#ums-maps-list .ums-clone-map,
+#ums-maps-list .ums-delete-map {
+  color: #64748b !important;
+}
+
+#ums-maps-list .ums-clone-map:hover,
+#ums-maps-list .ums-clone-map:focus {
+  color: #0e8a93 !important;
+}
+
+#ums-maps-list .ums-delete-map:hover,
+#ums-maps-list .ums-delete-map:focus {
+  border-color: #dc2626 !important;
+  color: #dc2626 !important;
 }
 
 #ums-maps-list .ums-delete-map,
@@ -477,7 +503,7 @@
 
 @media (max-width: 782px) {
   #ums-maps-list .ums-list-panel {
-    padding: 12px;
+    padding: 0 !important;
   }
 
   #ums-maps-list .ums-table-toolbar-left,

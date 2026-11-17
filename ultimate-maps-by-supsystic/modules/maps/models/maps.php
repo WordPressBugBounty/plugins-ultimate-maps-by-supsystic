@@ -160,9 +160,43 @@ class mapsModelUms extends modelUms
     }
     return !$this->haveErrors();
   }
+  /**
+   * Free version: settings the form did not send keep their saved values. While PRO is off its fields are not in the
+   * form (or not in the list of known settings), so a save in the free version used to reset KML layers, visitors'
+   * markers, Hide POI and the markers list type; they now stay as they were and come back with PRO.
+   * @param array $params The sent settings of the map
+   * @param string $serialized The settings about to be saved
+   * @return string
+   */
+  private function _keepUnsentParams($params, $serialized)
+  {
+    global $wpdb;
+    // With PRO every field is in the form; a field left out there (all KML files removed) means "clear it"
+    if (empty($params['id']) || frameUms::_()->getModule('supsystic_promo')->isPro()) {
+      return $serialized;
+    }
+    $stored = $wpdb->get_var($wpdb->prepare("SELECT params FROM {$wpdb->prefix}ums_maps WHERE id = %d", (int) $params['id']));
+    $stored = $stored ? utilsUms::unserialize($stored) : [];
+    $new = utilsUms::unserialize($serialized);
+    if (!is_array($stored) || !is_array($new)) {
+      return $serialized;
+    }
+    $kept = false;
+    foreach ($stored as $key => $value) {
+      // A setting the free version does not save (a PRO key), or one its form did not send
+      $unknown = !array_key_exists($key, $new);
+      $unsent = !$unknown && $value !== null && $new[$key] === null && !array_key_exists($key, $params);
+      if ($unknown || $unsent) {
+        $new[$key] = $value;
+        $kept = true;
+      }
+    }
+    return $kept ? utilsUms::serialize($new) : $serialized;
+  }
   public function updateMap($params)
   {
     $data = $this->prepareParams($params);
+    $data['params'] = $this->_keepUnsentParams($params, $data['params']);
     if ($this->_validateSaveMap($data)) {
       global $wpdb;
       $tableName = $wpdb->prefix . 'ums_maps';

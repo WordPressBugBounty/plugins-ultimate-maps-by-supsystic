@@ -1,0 +1,934 @@
+/*
+ * Map editor (admin.maps.edit-ui.js): group tabs, search, cards and switches. The rows stay in their tables; each table
+ * is drawn as a column of blocks and a card is a run of rows between a heading row and the last shown row.
+ */
+.ums-ed-wrap,
+.ums-ed-nav,
+.ums-ed-form {
+  --ums-ed-ink: #13202e;
+  --ums-ed-text: #334155;
+  --ums-ed-muted: #64748b;
+  --ums-ed-line: #e2e8f0;
+  --ums-ed-line-soft: #f1f5f9;
+  --ums-ed-surface: #f8fafc;
+  --ums-ed-accent: #0e8a93;
+  --ums-ed-accent-soft: #e6f6f7;
+  --ums-ed-navy: linear-gradient(145deg, #26384c 0%, #1d2b3c 100%);
+}
+
+/* ---------- Page head: shortcode and engine ---------- */
+.supsystic-plugin .ums-ed-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  margin: 4px 0 16px;
+  padding: 12px 16px;
+  border: 1px solid var(--ums-ed-line);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 16px -8px rgba(15, 23, 42, 0.1);
+}
+.supsystic-plugin .ums-ed-head > .sup-col {
+  float: none;
+  width: auto;
+  min-width: 0;
+  padding: 0;
+}
+.supsystic-plugin .ums-ed-head > .sup-col:first-child {
+  display: flex;
+  flex: 1 1 420px;
+  align-items: center;
+  gap: 8px;
+}
+.supsystic-plugin .ums-ed-head #umsCopyTextCodeExamples {
+  flex: none;
+  width: auto;
+  min-width: 150px;
+  margin: 0;
+}
+.supsystic-plugin .ums-ed-head .umsMapShortCodeShell {
+  flex: 1 1 auto;
+  float: none !important;
+  width: auto !important;
+  height: 34px !important;
+  margin: 0 !important;
+  border-color: var(--ums-ed-line);
+  background: var(--ums-ed-surface);
+  color: var(--ums-ed-ink);
+  font-family: Consolas, Monaco, monospace;
+  font-size: 12.5px;
+  text-align: left !important;
+}
+.supsystic-plugin .ums-ed-head p {
+  margin: 0;
+}
+.supsystic-plugin .ums-ed-head p > label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ums-ed-ink);
+  font-size: 13px !important;
+  font-weight: 600;
+}
+.supsystic-plugin .ums-ed-head #umsEngineSel {
+  min-width: 210px;
+  margin: 0;
+}
+
+/* ---------- Map / Markers / Shapes tabs: one pill bar, the active tab dark ---------- */
+.supsystic-plugin .ums-ed-tabs > .nav-tab-wrapper {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0 0 16px !important;
+  padding: 4px !important;
+  border: 1px solid var(--ums-ed-line) !important;
+  border-radius: 12px;
+  background: #fff;
+  line-height: 1;
+}
+.supsystic-plugin .ums-ed-tabs > .nav-tab-wrapper .nav-tab {
+  display: inline-flex;
+  align-items: center;
+  float: none;
+  height: 38px;
+  margin: 0 !important;
+  padding: 0 14px !important;
+  border: 0 !important;
+  border-radius: 9px;
+  background: none;
+  color: var(--ums-ed-text) !important;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+}
+.supsystic-plugin .ums-ed-tabs > .nav-tab-wrapper .nav-tab:hover {
+  background: var(--ums-ed-line-soft);
+  color: var(--ums-ed-ink) !important;
+}
+.supsystic-plugin .ums-ed-tabs > .nav-tab-wrapper .nav-tab.nav-tab-active {
+  background: var(--ums-ed-navy);
+  color: #fff !important;
+}
+.supsystic-plugin .ums-ed-tabs > .nav-tab-wrapper .nav-tab p {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+.supsystic-plugin .ums-ed-tabs > .nav-tab-wrapper .nav-tab p > .fa {
+  color: inherit;
+  font-size: 14px;
+}
+/* "New" of the Markers and Shapes tabs: a small chip inside the tab */
+.supsystic-plugin .ums-ed-tabs > .nav-tab-wrapper .nav-tab .button {
+  height: 24px;
+  min-height: 24px;
+  margin: 0 0 0 2px;
+  padding: 0 9px;
+  border-color: #bfe3e6 !important;
+  border-radius: 999px !important;
+  background: var(--ums-ed-accent-soft) !important;
+  color: #0b6e75 !important;
+  font-size: 11.5px;
+}
+.supsystic-plugin .ums-ed-tabs > .nav-tab-wrapper .nav-tab .button:hover,
+.supsystic-plugin .ums-ed-tabs > .nav-tab-wrapper .nav-tab .button:focus {
+  border-color: var(--ums-ed-accent) !important;
+  background: var(--ums-ed-accent) !important;
+  color: #fff !important;
+}
+.supsystic-plugin .ums-ed-tabs > .nav-tab-wrapper .nav-tab.nav-tab-active .button {
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #fff !important;
+}
+.supsystic-plugin .ums-ed-tabs > .nav-tab-wrapper .nav-tab.nav-tab-active .button:hover {
+  background: #fff !important;
+  color: #1d2b3c !important;
+}
+
+/* ---------- Group tabs and search of the map settings ---------- */
+.ums-ed-nav {
+  position: sticky;
+  top: var(--wp-admin--admin-bar--height, 32px);
+  z-index: 30;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 6px;
+  border: 1px solid var(--ums-ed-line);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 16px -8px rgba(15, 23, 42, 0.1);
+  -webkit-backdrop-filter: saturate(1.4) blur(8px);
+  backdrop-filter: saturate(1.4) blur(8px);
+}
+.ums-ed-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.supsystic-plugin .ums-ed-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  color: var(--ums-ed-text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+.supsystic-plugin .ums-ed-group .fa {
+  color: var(--ums-ed-muted);
+}
+.supsystic-plugin .ums-ed-group:hover {
+  background: var(--ums-ed-line-soft);
+  color: var(--ums-ed-ink);
+}
+.supsystic-plugin .ums-ed-group:focus-visible {
+  outline: 2px solid var(--ums-ed-accent);
+  outline-offset: 1px;
+}
+.supsystic-plugin .ums-ed-group.is-active {
+  background: var(--ums-ed-navy);
+  color: #fff;
+}
+.supsystic-plugin .ums-ed-group.is-active .fa {
+  color: #7ff8ef;
+}
+.supsystic-plugin .ums-ed-nav.is-searching .ums-ed-group.is-active {
+  background: none;
+  color: var(--ums-ed-text);
+}
+.supsystic-plugin .ums-ed-nav.is-searching .ums-ed-group.is-active .fa {
+  color: var(--ums-ed-muted);
+}
+.ums-ed-search {
+  position: relative;
+  flex: 1 1 180px;
+  max-width: 260px;
+  margin: 0;
+}
+.ums-ed-search .fa {
+  position: absolute;
+  top: 50%;
+  left: 11px;
+  transform: translateY(-50%);
+  color: var(--ums-ed-muted);
+  pointer-events: none;
+}
+.supsystic-plugin .ums-ed-search input[type='search'] {
+  width: 100%;
+  height: 34px;
+  min-height: 34px;
+  margin: 0;
+  padding: 0 10px 0 32px;
+  border: 1px solid var(--ums-ed-line);
+  border-radius: 10px;
+  background: var(--ums-ed-surface);
+}
+.supsystic-plugin .ums-ed-search input[type='search']:focus {
+  background: #fff;
+}
+.ums-ed-empty {
+  margin: 0 0 16px;
+  padding: 28px;
+  border: 1px dashed var(--ums-ed-line);
+  border-radius: 14px;
+  color: var(--ums-ed-muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+/* ---------- Cards: every table a column of blocks, every row a grid of label and field ---------- */
+.supsystic-plugin .ums-ed-form .ums-ed-table {
+  display: block;
+  width: 100%;
+  margin: 0;
+  border: 0;
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody {
+  display: block;
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr {
+  display: grid;
+  grid-template-columns: minmax(130px, 36%) minmax(0, 1fr);
+  align-items: center;
+  column-gap: 16px;
+  padding: 11px 18px;
+  border: 1px solid var(--ums-ed-line) !important;
+  border-top-color: var(--ums-ed-line-soft) !important;
+  border-bottom: 0 !important;
+  background: #fff;
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > th,
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td {
+  display: block;
+  width: auto;
+  min-width: 0;
+  padding: 0 !important;
+  border: 0 !important;
+  background: none;
+  color: var(--ums-ed-text);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+  vertical-align: middle;
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > [colspan] {
+  grid-column: 1 / -1;
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > th label,
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > th label.label-big {
+  color: var(--ums-ed-ink);
+  font-size: 13px;
+  font-weight: 600;
+}
+/* The old rules of the editor name the forms by id (labels 15px, floated, 140px wide) */
+#umsMapForm.ums-ed-form .ums-ed-table > tbody > tr > th label,
+#umsMarkerForm.ums-ed-form .ums-ed-table > tbody > tr > th label,
+#umsShapeForm.ums-ed-form .ums-ed-table > tbody > tr > th label {
+  float: none;
+  max-width: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+#umsMapForm.ums-ed-form .ums-ed-table > tbody > tr > th,
+#umsMarkerForm.ums-ed-form .ums-ed-table > tbody > tr > th,
+#umsShapeForm.ums-ed-form .ums-ed-table > tbody > tr > th {
+  width: auto;
+}
+/* The help icon sits right after the label, not at the far edge */
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > th > .supsystic-tooltip {
+  float: none !important;
+  margin-left: 6px;
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > th > br {
+  display: none;
+}
+
+/* Heading of a card */
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr.ums-ed-card-head {
+  padding: 16px 18px 12px;
+  border-top: 1px solid var(--ums-ed-line) !important;
+  border-radius: 14px 14px 0 0;
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr.ums-ed-card-head + tr {
+  border-top-color: var(--ums-ed-line) !important;
+}
+.ums-ed-card-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.ums-ed-card-icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: var(--ums-ed-accent-soft);
+  color: var(--ums-ed-accent);
+  font-size: 14px;
+}
+.ums-ed-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.ums-ed-card-text > strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ums-ed-ink);
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.ums-ed-card-text > span {
+  color: var(--ums-ed-muted);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.45;
+}
+.ums-ed-pro-tag {
+  padding: 0 7px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #4ae8ea 0%, #0e8a93 100%);
+  color: #fff;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  line-height: 17px;
+}
+
+/* The last shown row closes the card */
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr.ums-ed-last {
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--ums-ed-line) !important;
+  border-radius: 0 0 14px 14px;
+  box-shadow: 0 10px 18px -16px rgba(15, 23, 42, 0.45);
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr.ums-ed-card-head.ums-ed-last {
+  border-radius: 14px;
+}
+
+/* Rows the page shows with jQuery get an inline "display: table-row"; in the cards they stay a grid. Rows that a
+   stylesheet hides until a script shows them (the PRO shape form) stay hidden until then. */
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr[style*='table-row'] {
+  display: grid !important;
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr.umsEditShapeRow:not([style*='display']) {
+  display: none;
+}
+
+/* Hidden: other groups, search misses, empty cards, the old section heading, PRO fields of the free version */
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr.ums-ed-off,
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr.ums-ed-miss,
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr.ums-ed-card-empty,
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr.ums-ed-legacy-head,
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr.ums-ed-pro-hidden {
+  display: none !important;
+}
+.supsystic-plugin .ums-ed-form #umsExtendOptsShell,
+.supsystic-plugin .ums-ed-form .supRow {
+  margin: 0;
+  overflow: visible;
+}
+
+/* Old column helpers inside a row: one flexible line with room between them; a plain block takes the whole line */
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td:has(> .sup-col),
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td .sup-col.no-p {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td:has(> .sup-col) > div:not(.sup-col) {
+  flex: 1 1 100%;
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td .sup-col {
+  float: none;
+  width: auto;
+  min-height: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td .sup-col.sup-w-25 {
+  flex: 0 1 auto;
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td .sup-col.sup-w-25 > input[type='text'] {
+  width: 96px !important;
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td .sup-col.sup-w-50,
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td .sup-col.sup-w-75,
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td .sup-col.sup-w-100,
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td .sup-col.no-p {
+  flex: 1 1 160px;
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td .sup-col > label:not(:has(input)) {
+  display: block;
+  margin: 0 0 4px;
+  color: var(--ums-ed-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td .sup-col label:has(> input) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 14px 0 0 !important;
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td > div > label:not(:has(input)) {
+  display: block;
+  margin: 0 0 4px;
+  color: var(--ums-ed-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td .sup-col label {
+  top: 0 !important;
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td > label,
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td label:has(> input[type='radio']) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 14px;
+  color: var(--ums-ed-text);
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td .supsystic-tooltip[style*='float'] {
+  float: none !important;
+}
+/* Draggable / Mouse wheel / Double click sit in a nested table: two label-field pairs per line */
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td[colspan] > table.form-table {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td[colspan] > table.form-table tr {
+  border: 0 !important;
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td[colspan] > table.form-table th,
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td[colspan] > table.form-table td {
+  padding: 8px 12px 8px 0 !important;
+  color: var(--ums-ed-ink);
+  font-size: 13px;
+  font-weight: 600;
+  vertical-align: middle;
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td[colspan] > table.form-table th label {
+  font-weight: 600;
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td[colspan] > table.form-table th .supsystic-tooltip {
+  float: none !important;
+  margin-left: 6px;
+}
+
+/* ---------- Switches instead of checkboxes ---------- */
+.supsystic-plugin .ums-ed-form input[type='checkbox'] {
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  flex: none;
+  width: 36px !important;
+  min-width: 36px;
+  height: 20px !important;
+  margin: 0 8px 0 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: #cbd5e1;
+  box-shadow: none;
+  vertical-align: middle;
+  cursor: pointer;
+  transition: background-color 0.18s;
+}
+.supsystic-plugin .ums-ed-form input[type='checkbox']::before,
+.supsystic-plugin .ums-ed-form input[type='checkbox']:checked::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: auto;
+  bottom: auto;
+  inset: 2px auto auto 2px;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.3);
+  transition: transform 0.18s cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+.supsystic-plugin .ums-ed-form input[type='checkbox']:hover {
+  background-color: #b4c0d0;
+}
+.supsystic-plugin .ums-ed-form input[type='checkbox']:checked {
+  background: linear-gradient(135deg, #14a3ad 0%, #0e8a93 100%);
+}
+.supsystic-plugin .ums-ed-form input[type='checkbox']:checked::before {
+  transform: translateX(16px);
+}
+.supsystic-plugin .ums-ed-form input[type='checkbox']:focus-visible {
+  box-shadow: 0 0 0 3px rgba(14, 138, 147, 0.25);
+  outline: none;
+}
+.supsystic-plugin .ums-ed-form input[type='checkbox']:disabled {
+  background: #e2e8f0;
+  cursor: not-allowed;
+}
+
+/* ---------- Preview column: the map in a frame, Save dark, Delete plain, the list as a card ---------- */
+.supsystic-plugin .ums-ed-side #umsMapPreview {
+  overflow: hidden;
+  border: 1px solid var(--ums-ed-line);
+  border-radius: 14px;
+}
+.supsystic-plugin .ums-ed-side .umsControlBtns {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0 0;
+  padding: 0;
+  background: transparent;
+}
+.supsystic-plugin .ums-ed-side .umsControlBtns[style*='display: none'] {
+  display: none !important;
+}
+.supsystic-plugin .ums-ed-side .umsControlBtns > .sup-col {
+  flex: 1 1 0;
+  float: none;
+  width: auto;
+  padding: 0 !important;
+}
+.supsystic-plugin .ums-ed-side .umsControlBtns > div[style*='clear'] {
+  display: none;
+}
+.supsystic-plugin .ums-ed-side .umsControlBtns .button {
+  width: 100%;
+  height: 40px;
+  margin: 0 !important;
+  font-size: 13.5px;
+}
+.supsystic-plugin .ums-ed-side .umsControlBtns .button.ums-btn-danger {
+  border-color: var(--ums-ed-line) !important;
+  background: #fff !important;
+  color: var(--ums-ed-text) !important;
+}
+.supsystic-plugin .ums-ed-side .umsControlBtns .button.ums-btn-danger:hover,
+.supsystic-plugin .ums-ed-side .umsControlBtns .button.ums-btn-danger:focus {
+  border-color: #dc2626 !important;
+  color: #dc2626 !important;
+}
+.supsystic-plugin .ums-ed-side #umsMarkerList,
+.supsystic-plugin .ums-ed-side #umsShapeList {
+  margin-top: 12px;
+}
+.supsystic-plugin .ums-ed-side #umsMarkersSearchInput {
+  margin: 0 0 8px !important;
+}
+.supsystic-plugin .ums-ed-side .ui-jqgrid {
+  width: 100% !important;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid var(--ums-ed-line) !important;
+  border-radius: 14px;
+  background: #fff;
+}
+.supsystic-plugin .ums-ed-side .ui-jqgrid .ui-jqgrid-view,
+.supsystic-plugin .ums-ed-side .ui-jqgrid .ui-jqgrid-hdiv,
+.supsystic-plugin .ums-ed-side .ui-jqgrid .ui-jqgrid-bdiv,
+.supsystic-plugin .ums-ed-side .ui-jqgrid .ui-jqgrid-hbox {
+  width: 100% !important;
+  border: 0 !important;
+  background: transparent;
+}
+.supsystic-plugin .ums-ed-side .ui-jqgrid .ui-jqgrid-hbox {
+  padding: 0 !important;
+}
+.supsystic-plugin .ums-ed-side .ui-jqgrid table.ui-jqgrid-htable,
+.supsystic-plugin .ums-ed-side .ui-jqgrid table.ui-jqgrid-btable {
+  width: 100% !important;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+.supsystic-plugin .ums-ed-side .ui-jqgrid .ui-jqgrid-labels th {
+  height: 38px;
+  padding: 0 8px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--ums-ed-line) !important;
+  background: var(--ums-ed-surface) !important;
+  color: var(--ums-ed-muted) !important;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.supsystic-plugin .ums-ed-side .ui-jqgrid .ui-jqgrid-labels th > div {
+  height: auto;
+  color: inherit;
+}
+.supsystic-plugin .ums-ed-side .ui-jqgrid tr.jqgfirstrow td {
+  padding: 0 !important;
+  border: 0 !important;
+}
+.supsystic-plugin .ums-ed-side .ui-jqgrid tr.jqgrow td {
+  padding: 8px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--ums-ed-line-soft) !important;
+  background: transparent;
+  color: var(--ums-ed-text);
+  font-size: 13px;
+  vertical-align: middle;
+}
+.supsystic-plugin .ums-ed-side .ui-jqgrid tr.jqgrow:last-child td {
+  border-bottom: 0 !important;
+}
+.supsystic-plugin .ums-ed-side .ui-jqgrid tr.jqgrow:hover td {
+  background: var(--ums-ed-surface);
+}
+.supsystic-plugin .ums-ed-side .ui-jqgrid tr.jqgrow td .button {
+  width: 30px;
+  height: 30px;
+  min-height: 30px;
+  margin: 1px;
+  padding: 0;
+  color: var(--ums-ed-muted) !important;
+}
+.supsystic-plugin .ums-ed-side .ui-jqgrid tr.jqgrow td .button:hover {
+  color: var(--ums-ed-accent) !important;
+}
+
+/* ---------- Free version: the Shapes tab as a PRO card ---------- */
+.ums-promo-card {
+  overflow: hidden;
+  border: 1px solid var(--ums-ed-line, #e2e8f0);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px -12px rgba(15, 23, 42, 0.18);
+}
+.ums-promo-card-body {
+  padding: 22px 24px 20px;
+}
+.ums-promo-card-body h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 8px;
+  color: #13202e;
+  font-size: 18px;
+  font-weight: 700;
+}
+.ums-promo-card-body p {
+  margin: 0 0 14px;
+  color: #475569;
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+.ums-promo-card-body ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 18px;
+  margin: 0 0 18px;
+  padding: 0;
+  list-style: none;
+}
+.ums-promo-card-body li {
+  position: relative;
+  padding-left: 22px;
+  color: #334155;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.ums-promo-card-body li:before {
+  content: '\f00c';
+  position: absolute;
+  top: 1px;
+  left: 0;
+  color: #0e8a93;
+  font-family: FontAwesome;
+  font-size: 12px;
+}
+.ums-promo-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.ums-promo-card-shot {
+  display: block;
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+.ums-promo-card-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 960px) {
+  .ums-ed-nav {
+    position: static;
+  }
+  .ums-ed-search {
+    max-width: none;
+  }
+  .supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .supsystic-plugin .ums-ed-form input[type='checkbox'],
+  .supsystic-plugin .ums-ed-form input[type='checkbox']::before,
+  .supsystic-plugin .ums-ed-group {
+    transition: none;
+  }
+}
+
+/* ---------- Narrow columns: nothing gets wider than the column ---------- */
+.supsystic-plugin .ums-ed-head > .sup-col:first-child {
+  flex-wrap: wrap;
+}
+.supsystic-plugin .ums-ed-head .umsMapShortCodeShell {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+.supsystic-plugin .ums-ed-head > .sup-col,
+.supsystic-plugin .ums-ed-head p > label {
+  max-width: 100%;
+}
+.supsystic-plugin .ums-ed-head p > label {
+  flex-wrap: wrap;
+}
+.supsystic-plugin .ums-ed-head #umsEngineSel {
+  min-width: min(210px, 100%);
+  max-width: 100%;
+}
+/* Chosen takes the pixel width of the select when it starts; in a card it follows the card */
+.supsystic-plugin .ums-ed-form .chosen-container {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100%;
+}
+.supsystic-plugin .ums-ed-side .umsControlBtns {
+  flex-wrap: wrap;
+}
+.supsystic-plugin .ums-ed-side .umsControlBtns > .sup-col {
+  flex: 1 1 150px;
+  min-width: 0;
+}
+.supsystic-plugin .ums-ed-side .umsControlBtns .button {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* The point rows of the shape form: address, latitude, longitude and radius wrap instead of overflowing */
+.supsystic-plugin #umsShapeForm .umsShapePointRow > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.supsystic-plugin #umsShapeForm .umsShapePointRow > div > div {
+  flex: 1 1 120px;
+  width: auto !important;
+  min-width: 0;
+}
+.supsystic-plugin #umsShapeForm .umsShapePointRow input[type='text'] {
+  width: 100% !important;
+  max-width: 100%;
+}
+
+/* The page head, the tab bar, the cards and the preview start and end on the edges of the page frame */
+.supsystic-plugin .ums-ed-head {
+  margin: 0 0 16px;
+}
+.supsystic-plugin .ums-ed-tabs > .nav-tab-wrapper {
+  margin-left: 0 !important;
+}
+.supsystic-plugin .ums-ed-tabs .umsTabContent {
+  padding: 0;
+}
+@media (min-width: 992px) {
+  /* Two equal columns with a 16px gap: the old script gives the preview the width of the left column */
+  .supsystic-plugin .ums-ed-tabs .supsistic-half-side-box {
+    width: calc(50% - 8px);
+    padding: 0;
+  }
+  .supsystic-plugin .ums-ed-tabs .supsistic-half-side-box + .supsistic-half-side-box {
+    margin-left: 16px;
+  }
+}
+/* Map Height: the field as narrow as Map Width, the unit and "Adapt to screen height" in the same line */
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td .sup-col.sup-w-50.umsMainHeightOpts {
+  flex: 0 1 auto;
+}
+.supsystic-plugin .ums-ed-form .ums-ed-table > tbody > tr > td .umsMainHeightOpts > input[type='text'] {
+  width: 96px !important;
+}
+/* jqGrid draws its cells with "white-space: pre" (the line break between the two buttons stacked them) and its theme
+   with Verdana; the lists use the font of the admin and keep Edit and Delete in one line */
+.supsystic-plugin .ums-ed-side .ui-jqgrid,
+.supsystic-plugin .ums-ed-side .ui-jqgrid tr.jqgrow td,
+.supsystic-plugin .ums-ed-side .ui-jqgrid .ui-jqgrid-labels th {
+  font-family: inherit;
+}
+.supsystic-plugin .ums-ed-side .ui-jqgrid tr.jqgrow td[aria-describedby$='_actions'] {
+  white-space: nowrap;
+}
+.supsystic-plugin .ums-ed-side .ui-jqgrid tr.jqgrow td[aria-describedby$='_actions'] .button {
+  margin: 0 2px !important;
+}
+.supsystic-plugin .ums-ed-side .ui-jqgrid tr.jqgrow td[aria-describedby$='_coords'],
+.supsystic-plugin .ums-ed-side .ui-jqgrid tr.jqgrow td[aria-describedby$='_coords'] * {
+  color: var(--ums-ed-muted) !important;
+  font-size: 12px;
+}
+.supsystic-plugin .ums-ed-side .ui-jqgrid tr.jqgrow td[aria-describedby$='_title'] {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- Group tabs: one frame; one row when they fit, else even rows (4 + 3), a scrolling strip on phones ----------
+   The search sits in the same row on the right when there is room, else in its own row under the tabs. */
+.ums-ed-nav {
+  container: umsednav / inline-size;
+}
+.supsystic-plugin .ums-ed-nav .ums-ed-groups {
+  flex: 1 1 100%;
+  min-width: 0;
+}
+.supsystic-plugin .ums-ed-nav .ums-ed-group {
+  justify-content: center;
+  padding: 0 11px;
+  white-space: nowrap;
+}
+.supsystic-plugin .ums-ed-nav .ums-ed-search {
+  flex: 1 1 100%;
+  max-width: none;
+}
+/* The search field inside the frame of the tabs: a soft field, not a second frame */
+.supsystic-plugin .ums-ed-nav .ums-ed-search input[type='search'] {
+  border-color: transparent;
+  background: var(--ums-ed-surface);
+}
+.supsystic-plugin .ums-ed-nav .ums-ed-search input[type='search']:focus {
+  border-color: var(--ums-ed-accent);
+  background: #fff;
+}
+@container umsednav (max-width: 479px) {
+  .supsystic-plugin .ums-ed-nav .ums-ed-groups {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+  .supsystic-plugin .ums-ed-nav .ums-ed-group {
+    flex: 0 0 auto;
+  }
+}
+@container umsednav (min-width: 480px) and (max-width: 739px) {
+  .supsystic-plugin .ums-ed-nav .ums-ed-groups {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .supsystic-plugin .ums-ed-nav .ums-ed-group {
+    min-width: 0;
+    padding: 0 8px;
+  }
+}
+@container umsednav (min-width: 740px) {
+  .supsystic-plugin .ums-ed-nav .ums-ed-groups {
+    flex-wrap: nowrap;
+  }
+  .supsystic-plugin .ums-ed-nav .ums-ed-group {
+    flex: 1 1 auto;
+  }
+}
+@container umsednav (min-width: 1000px) {
+  .supsystic-plugin .ums-ed-nav .ums-ed-groups {
+    flex: 1 1 auto;
+  }
+  .supsystic-plugin .ums-ed-nav .ums-ed-search {
+    flex: 0 0 240px;
+  }
+}
+

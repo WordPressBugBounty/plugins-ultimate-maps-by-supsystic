@@ -121,6 +121,27 @@ umsLeafletMarker.prototype._setInfoWndContent = function (withOpenPopup) {
     this._infoWndOpened = true;
     this._markerObj.openPopup();
   }
+  this._refitPopupOnImages();
+};
+// Pictures of a description load after the popup is placed: then the popup grew up past the edge of the map. When
+// they load, the popup is laid out again and the map moves to show it whole (Leaflet's own autoPan of update())
+umsLeafletMarker.prototype._refitPopupOnImages = function () {
+  var popup = this._infoWindow,
+    el = popup && popup.getElement ? popup.getElement() : null;
+  if (!el) {
+    return;
+  }
+  jQuery(el)
+    .find('img')
+    .each(function () {
+      if (!this.complete) {
+        jQuery(this).one('load', function () {
+          if (popup.isOpen && popup.isOpen()) {
+            popup.update();
+          }
+        });
+      }
+    });
 };
 /*umsLeafletMarker.prototype.refreshInfoWnd = function() {
 
@@ -138,6 +159,7 @@ umsLeafletMarker.prototype._openInfoWnd = function (withOpenPopup) {
 umsLeafletMarker.prototype.directOpenInfoWnd = function () {
   if (this._infoWindow) {
     this._markerObj.openPopup();
+    this._refitPopupOnImages();
   } else this._setInfoWndContent();
 };
 umsLeafletMarker.prototype._closeInfoWnd = function () {

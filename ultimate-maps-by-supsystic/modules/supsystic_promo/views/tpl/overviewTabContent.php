@@ -88,6 +88,10 @@ $comparisonUrl = $promoModule->generateMainLink('utm_source=plugin&utm_medium=ov
     </section>
   <?php } ?>
 
+  <?php if (!$isPro) { ?>
+    <?php echo $this->proOffer; ?>
+  <?php } ?>
+
   <section class="ums-overview-layout">
     <div class="ums-overview-main">
       <div class="ums-overview-section-heading">
@@ -96,14 +100,14 @@ $comparisonUrl = $promoModule->generateMainLink('utm_source=plugin&utm_medium=ov
       </div>
 
       <div class="ums-overview-feature-grid">
-        <div class="ums-overview-feature-card"><i class="fa fa-map-marker"></i><h3><?php esc_html_e('Unlimited maps and markers', UMS_LANG_CODE); ?></h3><p><?php esc_html_e('Create as many maps and locations as the site needs. Search an address, click the map or use exact coordinates.', UMS_LANG_CODE); ?></p><span class="ums-overview-tag is-free">FREE</span></div>
-        <div class="ums-overview-feature-card"><i class="fa fa-picture-o"></i><h3><?php esc_html_e('Rich marker stories', UMS_LANG_CODE); ?></h3><p><?php esc_html_e('Combine text, photos, video, links, phone numbers and custom icons inside informative marker popups.', UMS_LANG_CODE); ?></p><span class="ums-overview-tag is-free">FREE</span></div>
-        <div class="ums-overview-feature-card"><i class="fa fa-object-group"></i><h3><?php esc_html_e('Categories and clustering', UMS_LANG_CODE); ?></h3><p><?php esc_html_e('Organize locations into filterable categories and group dense marker sets into clusters as visitors zoom.', UMS_LANG_CODE); ?></p><span class="ums-overview-tag is-free">FREE</span></div>
-        <div class="ums-overview-feature-card"><i class="fa fa-exchange"></i><h3><?php esc_html_e('Import, export and publish', UMS_LANG_CODE); ?></h3><p><?php esc_html_e('Move map and marker data with CSV, then publish maps using a shortcode, Gutenberg block, Elementor widget or PHP.', UMS_LANG_CODE); ?></p><span class="ums-overview-tag is-free">FREE</span></div>
-        <div class="ums-overview-feature-card"><i class="fa fa-map-o"></i><h3><?php esc_html_e('Choice of map engines', UMS_LANG_CODE); ?></h3><p><?php esc_html_e('Choose OpenStreetMap with Leaflet, Mapbox, Thunderforest or Bing to fit your project and provider preferences.', UMS_LANG_CODE); ?></p><span class="ums-overview-tag is-free">FREE</span></div>
-        <div class="ums-overview-feature-card"><i class="fa fa-file-code-o"></i><h3><?php esc_html_e('KML layers and filters', UMS_LANG_CODE); ?></h3><p><?php esc_html_e('Bring geographic layers into a map and let visitors filter the KML data they want to see.', UMS_LANG_CODE); ?></p><span class="ums-overview-tag is-pro">PRO</span></div>
-        <div class="ums-overview-feature-card"><i class="fa fa-list-alt"></i><h3><?php esc_html_e('Marker lists and sliders', UMS_LANG_CODE); ?></h3><p><?php esc_html_e('Show a marker list, table or slider alongside the map so visitors can browse locations in more detail.', UMS_LANG_CODE); ?></p><span class="ums-overview-tag is-pro">PRO</span></div>
-        <div class="ums-overview-feature-card"><i class="fa fa-pencil-square-o"></i><h3><?php esc_html_e('Shapes and visitor submissions', UMS_LANG_CODE); ?></h3><p><?php esc_html_e('Draw areas and paths, and allow controlled frontend marker submissions with category and usage limits.', UMS_LANG_CODE); ?></p><span class="ums-overview-tag is-pro">PRO</span></div>
+        <div class="ums-overview-feature-card"><i class="fa fa-map-marker"></i><h3><?php esc_html_e('Unlimited maps and markers', UMS_LANG_CODE); ?></h3><p><?php esc_html_e('Create as many maps and locations as the site needs. Search an address, click the map or use exact coordinates.', UMS_LANG_CODE); ?></p><?php if (!$isPro) { ?><span class="ums-overview-tag is-free">FREE</span><?php } ?></div>
+        <div class="ums-overview-feature-card"><i class="fa fa-picture-o"></i><h3><?php esc_html_e('Rich marker stories', UMS_LANG_CODE); ?></h3><p><?php esc_html_e('Combine text, photos, video, links, phone numbers and custom icons inside informative marker popups.', UMS_LANG_CODE); ?></p><?php if (!$isPro) { ?><span class="ums-overview-tag is-free">FREE</span><?php } ?></div>
+        <div class="ums-overview-feature-card"><i class="fa fa-object-group"></i><h3><?php esc_html_e('Categories and clustering', UMS_LANG_CODE); ?></h3><p><?php esc_html_e('Organize locations into filterable categories and group dense marker sets into clusters as visitors zoom.', UMS_LANG_CODE); ?></p><?php if (!$isPro) { ?><span class="ums-overview-tag is-free">FREE</span><?php } ?></div>
+        <div class="ums-overview-feature-card"><i class="fa fa-exchange"></i><h3><?php esc_html_e('Import, export and publish', UMS_LANG_CODE); ?></h3><p><?php esc_html_e('Move map and marker data with CSV, then publish maps using a shortcode, Gutenberg block, Elementor widget or PHP.', UMS_LANG_CODE); ?></p><?php if (!$isPro) { ?><span class="ums-overview-tag is-free">FREE</span><?php } ?></div>
+        <div class="ums-overview-feature-card"><i class="fa fa-map-o"></i><h3><?php esc_html_e('Choice of map engines', UMS_LANG_CODE); ?></h3><p><?php esc_html_e('Choose OpenStreetMap with Leaflet, Mapbox, Thunderforest or Bing to fit your project and provider preferences.', UMS_LANG_CODE); ?></p><?php if (!$isPro) { ?><span class="ums-overview-tag is-free">FREE</span><?php } ?></div>
+        <div class="ums-overview-feature-card"><i class="fa fa-file-code-o"></i><h3><?php esc_html_e('KML layers and filters', UMS_LANG_CODE); ?></h3><p><?php esc_html_e('Bring geographic layers into a map and let visitors filter the KML data they want to see.', UMS_LANG_CODE); ?></p><?php if (!$isPro) { ?><span class="ums-overview-tag is-pro">PRO</span><?php } ?></div>
+        <div class="ums-overview-feature-card"><i class="fa fa-list-alt"></i><h3><?php esc_html_e('Marker lists and sliders', UMS_LANG_CODE); ?></h3><p><?php esc_html_e('Show a marker list, table or slider alongside the map so visitors can browse locations in more detail.', UMS_LANG_CODE); ?></p><?php if (!$isPro) { ?><span class="ums-overview-tag is-pro">PRO</span><?php } ?></div>
+        <div class="ums-overview-feature-card"><i class="fa fa-pencil-square-o"></i><h3><?php esc_html_e('Shapes and visitor submissions', UMS_LANG_CODE); ?></h3><p><?php esc_html_e('Draw areas and paths, and allow controlled frontend marker submissions with category and usage limits.', UMS_LANG_CODE); ?></p><?php if (!$isPro) { ?><span class="ums-overview-tag is-pro">PRO</span><?php } ?></div>
       </div>
 
       <?php if (!$isPro) { ?>
@@ -143,21 +147,6 @@ $comparisonUrl = $promoModule->generateMainLink('utm_source=plugin&utm_medium=ov
         </div>
       </section>
 
-      <section id="ums-overview-compare" class="ums-overview-comparison">
-        <div class="ums-overview-card-head"><div><span class="ums-overview-pill"><?php esc_html_e('Free vs PRO', UMS_LANG_CODE); ?></span><h2><?php esc_html_e('Upgrade when the map becomes part of the customer journey.', UMS_LANG_CODE); ?></h2></div><p><?php esc_html_e('Nothing built in Free needs to be rebuilt after upgrading.', UMS_LANG_CODE); ?></p></div>
-        <div class="ums-overview-compare-table" role="table" aria-label="<?php esc_attr_e('Free and PRO feature comparison', UMS_LANG_CODE); ?>">
-          <div class="ums-overview-compare-row is-head" role="row"><strong role="columnheader"><?php esc_html_e('Capability', UMS_LANG_CODE); ?></strong><strong role="columnheader">FREE</strong><strong role="columnheader">PRO</strong></div>
-          <div class="ums-overview-compare-row" role="row"><span role="cell"><?php esc_html_e('Unlimited maps, markers, categories and clustering', UMS_LANG_CODE); ?></span><i class="fa fa-check" role="cell"></i><i class="fa fa-check" role="cell"></i></div>
-          <div class="ums-overview-compare-row" role="row"><span role="cell"><?php esc_html_e('CSV import/export and WordPress publishing', UMS_LANG_CODE); ?></span><i class="fa fa-check" role="cell"></i><i class="fa fa-check" role="cell"></i></div>
-          <div class="ums-overview-compare-row" role="row"><span role="cell"><?php esc_html_e('OpenStreetMap, Mapbox, Thunderforest and Bing', UMS_LANG_CODE); ?></span><i class="fa fa-check" role="cell"></i><i class="fa fa-check" role="cell"></i></div>
-          <div class="ums-overview-compare-row" role="row"><span role="cell"><?php esc_html_e('KML layers, import and filters', UMS_LANG_CODE); ?></span><i class="fa fa-minus" role="cell"></i><i class="fa fa-check" role="cell"></i></div>
-          <div class="ums-overview-compare-row" role="row"><span role="cell"><?php esc_html_e('Shapes and heatmaps', UMS_LANG_CODE); ?></span><i class="fa fa-minus" role="cell"></i><i class="fa fa-check" role="cell"></i></div>
-          <div class="ums-overview-compare-row" role="row"><span role="cell"><?php esc_html_e('Marker lists, sliders and frontend submissions', UMS_LANG_CODE); ?></span><i class="fa fa-minus" role="cell"></i><i class="fa fa-check" role="cell"></i></div>
-        </div>
-        <?php if (!$isPro) { ?>
-          <div class="ums-overview-compare-cta"><div><strong><?php esc_html_e('Ready for the complete mapping toolkit?', UMS_LANG_CODE); ?></strong><span><?php esc_html_e('Explore the current PRO features and license options.', UMS_LANG_CODE); ?></span></div><a class="button button-primary" href="<?php echo esc_url($comparisonUrl); ?>" target="_blank" rel="noopener"><i class="fa fa-balance-scale"></i> <?php esc_html_e('Compare licenses', UMS_LANG_CODE); ?></a></div>
-        <?php } ?>
-      </section>
 
       <section class="ums-overview-workflow">
         <div class="ums-overview-workflow-heading"><span class="ums-overview-pill"><?php esc_html_e('Fast setup', UMS_LANG_CODE); ?></span><h2><?php esc_html_e('Publish a useful map in four steps.', UMS_LANG_CODE); ?></h2></div>
@@ -186,7 +175,9 @@ $comparisonUrl = $promoModule->generateMainLink('utm_source=plugin&utm_medium=ov
         <a class="ums-overview-resource-link" href="<?php echo esc_url($addMapUrl); ?>"><i class="fa fa-plus-circle"></i> <?php esc_html_e('Create a new map', UMS_LANG_CODE); ?></a>
         <a class="ums-overview-resource-link" href="<?php echo esc_url($allMapsUrl); ?>"><i class="fa fa-map"></i> <?php esc_html_e('Manage maps', UMS_LANG_CODE); ?></a>
         <a class="ums-overview-resource-link" href="<?php echo esc_url($settingsUrl); ?>"><i class="fa fa-map-o"></i> <?php esc_html_e('Choose map engine', UMS_LANG_CODE); ?></a>
-        <a class="ums-overview-resource-link" href="#ums-overview-compare"><i class="fa fa-balance-scale"></i> <?php esc_html_e('Compare Free and PRO', UMS_LANG_CODE); ?></a>
+        <?php if (!$isPro) { ?>
+          <a class="ums-overview-resource-link" href="#ums-compare"><i class="fa fa-balance-scale"></i> <?php esc_html_e('Compare Free and PRO', UMS_LANG_CODE); ?></a>
+        <?php } ?>
         <a class="ums-overview-resource-link" href="#ums-overview-help"><i class="fa fa-book"></i> <?php esc_html_e('FAQ and documentation', UMS_LANG_CODE); ?></a>
         <a class="ums-overview-resource-link" href="#ums-overview-videos"><i class="fa fa-play"></i> <?php esc_html_e('Video tutorials', UMS_LANG_CODE); ?></a>
         <a class="ums-overview-resource-link" href="#ums-overview-server"><i class="fa fa-cog"></i> <?php esc_html_e('Server settings', UMS_LANG_CODE); ?></a>

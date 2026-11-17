@@ -437,10 +437,14 @@ class mapsViewUms extends viewUms
     frameUms::_()->getModule('templates')->loadJqGrid();
     frameUms::_()->addScript('jquery-ui-sortable');
     frameUms::_()->addScript('wp.tabs', UMS_JS_PATH . 'wp.tabs.js');
-    frameUms::_()->addScript('admin.maps.edit', $this->getModule()->getModPath() . 'js/admin.maps.edit.js');
-    frameUms::_()->addScript('admin.marker.edit', frameUms::_()->getModule('marker')->getModPath() . 'js/admin.marker.edit.js');
+    frameUms::_()->addScript('admin.maps.edit', $this->getModule()->getModPath() . 'js/admin.maps.edit.js', [], UMS_VERSION_PLUGIN . '-ed-1');
+    frameUms::_()->addScript('admin.marker.edit', frameUms::_()->getModule('marker')->getModPath() . 'js/admin.marker.edit.js', [], UMS_VERSION_PLUGIN . '-mk-2');
 
     frameUms::_()->addStyle('admin.maps', $this->getModule()->getModPath() . 'css/admin.maps.css');
+    // The editor layout (group tabs, search, cards, switches); only the look, the fields stay as they are
+    frameUms::_()->addStyle('admin.maps.edit-ui', $this->getModule()->getModPath() . 'css/admin.maps.edit-ui.css', [], UMS_VERSION_PLUGIN . '-ed-1');
+    frameUms::_()->addScript('admin.maps.edit-ui', $this->getModule()->getModPath() . 'js/admin.maps.edit-ui.js', ['jquery'], UMS_VERSION_PLUGIN . '-ed-1');
+    frameUms::_()->addJSVar('admin.maps.edit-ui', 'umsEditUi', $this->getEditUiTexts());
 
     frameUms::_()->addJSVar('admin.maps.edit', 'umsMapShortcode', UMS_SHORTCODE);
     frameUms::_()->addJSVar('admin.maps.edit', 'umsAllStylizationsList', $allStylizationsList);
@@ -594,6 +598,66 @@ class mapsViewUms extends viewUms
     ]);
     return parent::getContent('mapsEdit');
   }
+  /**
+   * Texts of the editor layout (admin.maps.edit-ui.js): groups, cards and the PRO notes of the free version.
+   */
+  public function getEditUiTexts()
+  {
+    return [
+      'proUrl' => frameUms::_()->getModule('supsystic_promo')->getMainLink(),
+      'readMore' => __('Read more', UMS_LANG_CODE),
+      'groups' => __('Settings groups', UMS_LANG_CODE),
+      'search' => __('Search settings', UMS_LANG_CODE),
+      'noMatch' => __('No settings match your search.', UMS_LANG_CODE),
+      'group_basics' => __('Basics', UMS_LANG_CODE),
+      'group_view' => __('Center & Zoom', UMS_LANG_CODE),
+      'group_controls' => __('Controls', UMS_LANG_CODE),
+      'group_look' => __('Look', UMS_LANG_CODE),
+      'group_markers' => __('Markers', UMS_LANG_CODE),
+      'group_layers' => __('Layers', UMS_LANG_CODE),
+      'group_info' => __('Info window', UMS_LANG_CODE),
+      'group_more' => __('More', UMS_LANG_CODE),
+      'card_general' => __('Name and size', UMS_LANG_CODE),
+      'cardDesc_general' => __('How the map is called and how much room it takes on the page.', UMS_LANG_CODE),
+      'card_controls' => __('Navigation and gestures', UMS_LANG_CODE),
+      'cardDesc_controls' => __('What visitors can do with the map: zoom buttons, dragging, the mouse wheel.', UMS_LANG_CODE),
+      'card_view' => __('Center and zoom', UMS_LANG_CODE),
+      'cardDesc_view' => __('Where the map opens and how close visitors can zoom.', UMS_LANG_CODE),
+      'card_look' => __('Map look', UMS_LANG_CODE),
+      'cardDesc_look' => __('The tiles of the map: streets, terrain, satellite and more.', UMS_LANG_CODE),
+      'card_markers' => __('Markers on the map', UMS_LANG_CODE),
+      'cardDesc_markers' => __('Descriptions on hover and groups of close markers.', UMS_LANG_CODE),
+      'card_list' => __('Markers list', UMS_LANG_CODE),
+      'cardDesc_list' => __('A slider or a table of all markers under or beside the map.', UMS_LANG_CODE),
+      'card_kml' => __('KML layers', UMS_LANG_CODE),
+      'cardDesc_kml' => __('Routes, areas and points from KML files over the map.', UMS_LANG_CODE),
+      'card_poi' => __('Points of interest', UMS_LANG_CODE),
+      'cardDesc_poi' => __('Hide hotels, fuel stations and other places of the base map.', UMS_LANG_CODE),
+      'card_visitors' => __('Markers from visitors', UMS_LANG_CODE),
+      'cardDesc_visitors' => __('Visitors add their own markers to the map from the page.', UMS_LANG_CODE),
+      'card_infownd' => __('Info window', UMS_LANG_CODE),
+      'cardDesc_infownd' => __('The popup with the marker or shape description.', UMS_LANG_CODE),
+      'card_marker' => __('Marker', UMS_LANG_CODE),
+      'cardDesc_marker' => __('The name and the text of the popup.', UMS_LANG_CODE),
+      'card_place' => __('Icon and location', UMS_LANG_CODE),
+      'cardDesc_place' => __('The pin, its place on the map and its categories.', UMS_LANG_CODE),
+      'card_behaviour' => __('On click and hover', UMS_LANG_CODE),
+      'cardDesc_behaviour' => __('What happens when visitors click or point at the marker.', UMS_LANG_CODE),
+      'card_period' => __('Show between dates', UMS_LANG_CODE),
+      'cardDesc_period' => __('The marker appears on the map only for the dates you set.', UMS_LANG_CODE),
+      'card_shape' => __('Shape', UMS_LANG_CODE),
+      'cardDesc_shape' => __('Pick a type to draw a new shape, or edit the chosen one.', UMS_LANG_CODE),
+      'card_shapeLook' => __('Look and description', UMS_LANG_CODE),
+      'cardDesc_shapeLook' => __('Lines, fill and the text of the popup.', UMS_LANG_CODE),
+      'card_points' => __('Points', UMS_LANG_CODE),
+      'cardDesc_points' => __('Type an address or coordinates, or click the map to add points.', UMS_LANG_CODE),
+      'pro_markers_list' => __('Photo sliders and a searchable table of your locations next to the map are in Ultimate Maps PRO.', UMS_LANG_CODE),
+      'pro_kml' => __('KML layers from a file or a link, with their points imported as markers, are in Ultimate Maps PRO.', UMS_LANG_CODE),
+      'pro_hide_poi' => __('Hiding the points of interest of the base map is in Ultimate Maps PRO.', UMS_LANG_CODE),
+      'pro_frontend_markers' => __('Letting visitors add markers from the page, with limits and categories, is in Ultimate Maps PRO.', UMS_LANG_CODE),
+      'pro_marker_period' => __('Showing a marker only between two dates is in Ultimate Maps PRO.', UMS_LANG_CODE),
+    ];
+  }
   public function getAllContactForms()
   {
     $formsList = [];
@@ -627,7 +691,7 @@ class mapsViewUms extends viewUms
 
     $this->_connectApiAssets($engine, $fullEngine, $map, $forAdminArea);
     frameUms::_()->addScript('ums_' . $engine . '.core.maps', $this->getModule()->getModPath() . 'js/engines/core.' . $engine . '.js');
-    frameUms::_()->addScript('ums_' . $engine . '.core.marker', frameUms::_()->getModule('marker')->getModPath() . 'js/engines/core.' . $engine . '.marker.js');
+    frameUms::_()->addScript('ums_' . $engine . '.core.marker', frameUms::_()->getModule('marker')->getModPath() . 'js/engines/core.' . $engine . '.marker.js', [], UMS_VERSION_PLUGIN . '-mk-2');
 
     // Connect markers clusterization assets
     if ((!empty($map) && (isset($map['params']['marker_clasterer']) && $map['params']['marker_clasterer'] != 'none')) || $forAdminArea || ($params && isset($params['add_clasterer']))) {
@@ -729,7 +793,7 @@ class mapsViewUms extends viewUms
     switch ($engine) {
       case 'l-mapbox':
         $types = [
-          'streets-v11' => ['label' => __('Streets', UMS_LANG_CODE), 'attr' => '© <a href="https://www.mapbox.com/">Mapbox</a> | © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'],
+          'streets-v11' => ['label' => __('Streets', UMS_LANG_CODE), 'attr' => 'В© <a href="https://www.mapbox.com/">Mapbox</a> | В© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'],
           'outdoors-v11' => __('Outdoors', UMS_LANG_CODE),
           'light-v10' => __('Light', UMS_LANG_CODE),
           'dark-v10' => __('Dark', UMS_LANG_CODE),
@@ -739,7 +803,7 @@ class mapsViewUms extends viewUms
         break;
       case 'l-thunderforest':
         $types = [
-          'cycle' => ['label' => __('OpenCycleMap', UMS_LANG_CODE), 'attr' => '© <a href="http://www.thunderforest.com/">Thunderforest</a> | © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'],
+          'cycle' => ['label' => __('OpenCycleMap', UMS_LANG_CODE), 'attr' => 'В© <a href="http://www.thunderforest.com/">Thunderforest</a> | В© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'],
           'transport' => __('Transport', UMS_LANG_CODE),
           'landscape' => __('Landscape', UMS_LANG_CODE),
           'outdoors' => __('Outdoors', UMS_LANG_CODE),
@@ -868,9 +932,9 @@ class mapsViewUms extends viewUms
         break;
       case 'l-maptiles':
         $types = [
-          'en' => ['label' => __('English world map', UMS_LANG_CODE), 'attr' => '© <a href="https://www.maptilesapi.com/">Map Tiles API</a> | © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'],
-          'es' => ['label' => __('Spanish world map', UMS_LANG_CODE), 'attr' => '© <a href="https://www.maptilesapi.com/">Map Tiles API</a> | © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'],
-          'fr' => ['label' => __('French world map', UMS_LANG_CODE), 'attr' => '© <a href="https://www.maptilesapi.com/">Map Tiles API</a> | © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'],
+          'en' => ['label' => __('English world map', UMS_LANG_CODE), 'attr' => 'В© <a href="https://www.maptilesapi.com/">Map Tiles API</a> | В© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'],
+          'es' => ['label' => __('Spanish world map', UMS_LANG_CODE), 'attr' => 'В© <a href="https://www.maptilesapi.com/">Map Tiles API</a> | В© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'],
+          'fr' => ['label' => __('French world map', UMS_LANG_CODE), 'attr' => 'В© <a href="https://www.maptilesapi.com/">Map Tiles API</a> | В© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'],
         ];
         break;
     }
